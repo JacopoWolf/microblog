@@ -14,22 +14,38 @@
             <div class="title">
                 <h1>Microbloggologgo</h1>
             </div>
-            <div class="main">
-
-
-                <p id="hellomsg"></p>
-
+            <div class="main" id="postcontainer">
 
             </div>
+            <div class="main">
+                load
+            </div>
+
         </div>
 
+
         <script>
-            
-            $.get( '/hello', function (data)
+            function loadmore( n )
             {
-                $('#hellomsg').html( data )
-            });
-            
+                $.get( "/rest/post?count=6", function(data)
+                {
+                    $.each(data,function(i,v)
+                    {
+                        $('#postcontainer').append
+                        (  
+                            '<div class="post">' +
+                                '<div class="postheader">' + v['author']['userName'] + ' on ' + v['date'] +'</div>' +
+                                '<div class="postcontent">' +
+                                    '<h3>' + v['title'] +'</h3>' +
+                                    '<p>' + v['content'] + '</p>' +
+                                '</div>' +
+                            '</div>'
+                        )
+                    })
+                })
+            }
+
+            $(document).ready( function() { loadmore(5) } );
         </script>
 
     </body>

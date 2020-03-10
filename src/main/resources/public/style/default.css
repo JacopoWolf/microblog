@@ -32,4 +32,23 @@ div.main
     padding: 2%;
 
     background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/* posts */
+
+div.post
+{
+    width: 60%;
+    background-color: lightblue;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.post .postheader
+{
+    background-color: aliceblue;
+    padding: 3px;
 }
