@@ -1,4 +1,7 @@
 package edu.marconivr.jacopo.microblog.entities;
+
+import java.util.List;
+
 import javax.persistence.*;
 
 import lombok.Getter;
@@ -13,11 +16,15 @@ public class User
     public Long id;
 
     @Basic
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     public String userName;
 
     @Basic
     public String email;
+
+    @OneToMany
+    @Getter @Setter
+    private List<Post> posts;
 
 
     public User () {}
