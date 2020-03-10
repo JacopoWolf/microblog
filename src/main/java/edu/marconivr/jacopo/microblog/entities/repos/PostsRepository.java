@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.marconivr.jacopo.microblog.entities.Post;
-import edu.marconivr.jacopo.microblog.entities.User;
 
 @Repository
 public interface PostsRepository extends JpaRepository<Post,Long>

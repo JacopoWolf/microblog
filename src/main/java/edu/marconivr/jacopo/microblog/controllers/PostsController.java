@@ -9,7 +9,6 @@ import javax.ws.rs.QueryParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.marconivr.jacopo.microblog.entities.Post;
 import edu.marconivr.jacopo.microblog.entities.User;
