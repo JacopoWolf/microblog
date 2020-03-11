@@ -4,6 +4,7 @@ body
     font-family: Verdana, Geneva, Tahoma, sans-serif ;
     margin: auto; 
     color: black;
+    min-width: 600px;
 }
 
 div.content
@@ -16,15 +17,52 @@ div.content
     flex-direction: column;
 }
 
+div.post h3
+{
+    color: cornflowerblue;
+    cursor: alias;
+}
+div.options span
+{
+    cursor: alias;
+}
+
+
+/* header */
+
+div.options
+{
+    background-color: teal;
+    padding: 5px 0 5px 0;
+    width: 75%;
+    position: fixed;
+    
+    text-align: center;
+
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+}
+
+
 div.title
 {
-    padding: 2px;
+    padding: 5px;
+    margin-top: 2%;
 
 
     background-color:cadetblue;
     color: white;
 
     text-align: center;
+}
+
+.line
+{
+    height: 1px;
+    width: 95%;
+    background-color: black;
+    margin: auto;
 }
 
 div.main
@@ -35,6 +73,7 @@ div.main
     display: flex;
     flex-direction: column;
 }
+
 
 /* posts */
 
@@ -47,7 +86,7 @@ div.post
     padding: 5px;
 }
 
-.post .postheader
+div.postheader
 {
     background-color: aliceblue;
     padding: 3px;

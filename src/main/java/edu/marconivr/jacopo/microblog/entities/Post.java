@@ -17,8 +17,7 @@ public class Post
     @Temporal( TemporalType.DATE )
     public Date date;
 
-    @Basic
-    @Column( length = 256 )
+    @Lob @Column
     public String content;
 
     @Basic 

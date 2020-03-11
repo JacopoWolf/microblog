@@ -4,48 +4,169 @@
         <title>Microbloggologgo</title>
         <link rel="stylesheet" href="style/default.css">
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+        
     </head>
     <body>
+        <div class="options">
+            <button id="btn_back">Indietro</button>
+            <span id="pagespan"><i><b>Page: </b></i></span><span id="pagecount">0</span>
+            <button id="btn_forw">Avanti</button>
+            <button>Cerca</button>
+        </div>
         <div class="content">
-
-            <div>
-                
-            </div>
             <div class="title">
                 <h1>Microbloggologgo</h1>
             </div>
             <div class="main" id="postcontainer">
 
+                <!--content goes here-->
+                
             </div>
-            <div class="main">
-                load
+
+        </div>
+
+        <!-- TEMPLATES for js generation go here -->
+        <div id="templates" style="display: none;">
+        
+            <!-- post when in lib -->
+            <div class="post">
+                <div class="postheader">AUTHOR on DATE</div>
+                <div class="postcontent">
+                    <h3 class="postcontent_h">TITLE</h3>
+                    <p class="postcontent_p">CONTENT</p>
+                </div>
+            </div>
+
+            <!-- post when focused -->
+            <div class="singlepost">
+                <p class="singlepost_h">DATE</p>
+                <div class="singlepostheader">
+                    <b><p class="singlepostheader_usrn">USERNAME</p></b>
+                    <h2 class="singlepostheader_t">TITLE</h2>
+                </div>
+                <div class="singlepostcontent">
+                    <p class="singlepostcontent_p">CONTENT</p>
+                </div>
+                
+                <div class="line"></div>
+
             </div>
 
         </div>
 
 
+        <!-- main script -->
         <script>
-            function loadmore( n )
+
+            var APP = 
             {
-                $.get( "/rest/post?count=6", function(data)
+                // global variables
+
+                pagesize    : 4,
+                page        : 1,
+
+
+                // loading methods
+
+                laodpage : function ( page, forw )
                 {
-                    $.each(data,function(i,v)
+                    if (page != null)
+                        APP.page = page;
+
+                    // controlla la validità delle variabili
+                    if (forw != null)
+                        if (forw)
+                            APP.page+=1;
+                        else
+                            APP.page-=1;
+
+                    if (APP.page < 1)
+                        APP.page = 1;
+
+                    var p = parseInt(APP.page);
+                    var s = parseInt(APP.pagesize);
+
+                     
+                    $.get( '/rest/post?count=' + s + '&page=' + p + '&limitcontent=' + 40 , function(data)
                     {
-                        $('#postcontainer').append
-                        (  
-                            '<div class="post">' +
-                                '<div class="postheader">' + v['author']['userName'] + ' on ' + v['date'] +'</div>' +
-                                '<div class="postcontent">' +
-                                    '<h3>' + v['title'] +'</h3>' +
-                                    '<p>' + v['content'] + '</p>' +
-                                '</div>' +
-                            '</div>'
-                        )
-                    })
-                })
+                        APP.displayMany( data )
+                    });
+
+                },
+
+                loadpost : function ( id )
+                {
+                    $.get( '/rest/post/id/' + id, function(data) 
+                    {
+                        //todo aggiungere recursivamente cose
+                        APP.displayPost( data );
+                    });
+                },
+
+                
+                // display methods
+
+                clear : function ()
+                {
+                    $("#postcontainer").html("");
+                },
+
+                displayPost : function( post )
+                {
+                    APP.clear();
+                    $('#pagecount').html( '<i><b>(' + APP.page + ')</b></i>' );
+
+                    var pt = $('#templates').find('.singlepost').clone();
+
+                    pt.find('.singlepost_h').html( post['date'] );
+                    pt.find('.singlepostheader_usrn').html( post['author']['username'] );
+                    pt.find('.singlepostheader_t').html( post['title'] );
+                    pt.find('.singlepostcontent_p').html( post['content'] );
+
+                    $('#postcontainer').append( pt );
+
+                },
+
+                displayMany : function ( data, comments )
+                {
+                    APP.clear();  
+                    $('#pagecount').html(APP.page);
+                    $.each(data,function(i,v)
+                        {
+                            var pt = $('#templates').find('.post').clone();
+
+                            pt.find('.postheader').html( '<b>' + v['author']['username'] + '</b> on ' + v['date'] );
+
+                            pt.find('.postcontent_h').html(v['title'])
+                            pt.find('.postcontent_h').click( function(){APP.loadpost(v['id'])} );
+
+                            pt.find('.postcontent_p').html(v['content'] + '...');
+
+                            $('#postcontainer').append( pt );
+                        });
+                },
+
+
+                // for malefic testing purposes. 
+
+                test : function()
+                {
+                    alert('funzionaaaaa mhuhuhahaha');
+                }
+
             }
 
-            $(document).ready( function() { loadmore(5) } );
+            $(document).ready( function() 
+            { 
+                APP.laodpage(1,null);
+
+                // event binding
+                $('#btn_back').click(function(){APP.laodpage(null,false)});
+                $('#btn_forw').click(function(){APP.laodpage(null,true)});
+                $('#pagespan').click(function(){APP.laodpage(0,null)});
+                $('#pagecount').click(function(){APP.laodpage(null,null)});
+            });
+
         </script>
 
     </body>
