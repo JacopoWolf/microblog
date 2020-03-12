@@ -1,23 +1,25 @@
 package edu.marconivr.jacopo.microblog.entities;
 
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table( name = "post" )
-public class Post
+@Table(name = "comment")
+public class Comment
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Basic
-    public String title;
+    @ManyToOne
+    @Getter @Setter
+    private Post under;
+
+    @ManyToOne
+    public User author;
 
     @Temporal( TemporalType.TIMESTAMP )
     public Date date;
@@ -25,15 +27,4 @@ public class Post
     @Lob @Column
     public String content;
 
-    @OneToMany
-    private Set<Comment> comments;
-
-    @ManyToOne
-    public User author;
-
-
-    public Long getId()
-    {
-        return this.id;
-    }
 }

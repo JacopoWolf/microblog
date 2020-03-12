@@ -3,6 +3,7 @@ package edu.marconivr.jacopo.microblog.controllers;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -59,14 +60,23 @@ public class PostsController
 
     }
 
-    @GET @Path("/id/{id}") 
+    @GET @Path("/{id}") 
     @Produces("application/json")
     public Post getById ( @PathParam("id") Long id )
     {
         if (id == null)
             throw new WebApplicationException( Response.Status.BAD_REQUEST );
-            
-        return postsRepo.findById(id).get();
+        
+        try
+        {
+            return postsRepo.findById(id).get();
+        }
+        catch (NoSuchElementException e)
+        {
+            throw new WebApplicationException( Response.Status.NOT_FOUND );
+        }
+        
+        
     }
     
 

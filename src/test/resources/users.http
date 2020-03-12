@@ -1,18 +1,25 @@
 ###
 
-GET http://localhost:8080/rest/post/id/2
-
-
-###
-
-GET http://localhost:8080/rest/user?name=pippo
+GET http://localhost:8080/rest/post/5
 
 ###
 
-PUT  http://localhost:8080/rest/user HTTP/1.1
+GET http://localhost:8080/rest/post?count=10&page=0&limitcontent=3
+
+###
+
+GET http://localhost:8080/rest/post/5/comments
+
+###
+
+GET http://localhost:8080/rest/user?name=qualcuno
+
+###
+
+POST  http://localhost:8080/rest/user
 content-type: application/json
 
 {
-    "userName" : "pippo",
-    "email" : "dioporco@diocane.com"
+    "username" : "qualcuniche",
+    "email" : "qualche@cuno.com"
 }

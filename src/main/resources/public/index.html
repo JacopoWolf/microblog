@@ -12,16 +12,37 @@
             <span id="pagespan"><i><b>Page: </b></i></span><span id="pagecount">0</span>
             <button id="btn_forw">Avanti</button>
             <button>Cerca</button>
+            <button id="btn_create">Crea</button>
         </div>
         <div class="content">
             <div class="title">
                 <h1>Microbloggologgo</h1>
             </div>
-            <div class="main" id="postcontainer">
+            <div class="main" id="postcontainer" style="display: none;">
 
                 <!--content goes here-->
                 
             </div>
+
+            <!-- post creator -->
+            <div class="main" id="postcreator" style="display: none;">
+                <button style="float: right; position: relative;" onclick="APP.changecontext('view')"><h2>Indietro</h2></button>
+                
+                <h2>Scrivi un post</h2>
+                <div class="line"></div>
+                
+                    nome utente<br> <input type="text" autocomplete="username" id="c_username"><br>
+                    e-mail<br><input type="text" autocomplete="email" id="c_email"><br><br>
+                    TITOLO<br> <input type="text" class="long" id="c_title"><br>
+                    <button style="float: right;" onclick="APP.submitpost()"><h2>Invia</h2></button>
+                    CONTENUTO<br><textarea class="long" rows="20" id="c_content"  style="resize: vertical;"></textarea>
+                
+            </div>
+
+            <footer>
+                <p>Please don't attempt at contacting me since I want to be left alone. Thanks.</p>
+                <p>copyright &copy Comparin Jacopo 2020</p>
+            </footer>
 
         </div>
 
@@ -52,6 +73,14 @@
 
             </div>
 
+            <!-- comment on focused post -->
+            <div class="comment">
+                <div class="postheader">AUTHOR on DATE</div>
+                <div class="postcontent">CONTENT</div>
+            </div>
+
+            
+
         </div>
 
 
@@ -63,8 +92,30 @@
                 // global variables
 
                 pagesize    : 4,
-                page        : 1,
+                page        : 0,
+                currentpage : 'create',
+                currentpost : -1,
 
+                // pages methods
+
+                changecontext : function(context)
+                {
+                    switch (context) {
+                        case 'view':
+                            $('#postcontainer').css('display','block');
+                            $('#postcreator').css('display','none');
+                            APP.currentpage = context;
+                            break;
+
+                        case 'create':
+                            $('#postcontainer').css('display','none');
+                            $('#postcreator').css('display','block');
+                            APP.currentpage = context;
+                            break;
+                        default:
+                            break;
+                    }
+                },
 
                 // loading methods
 
@@ -80,8 +131,8 @@
                         else
                             APP.page-=1;
 
-                    if (APP.page < 1)
-                        APP.page = 1;
+                    if (APP.page < 0)
+                        APP.page = 0;
 
                     var p = parseInt(APP.page);
                     var s = parseInt(APP.pagesize);
@@ -96,13 +147,62 @@
 
                 loadpost : function ( id )
                 {
-                    $.get( '/rest/post/id/' + id, function(data) 
-                    {
-                        //todo aggiungere recursivamente cose
+                    $.get( '/rest/post/' + id, function(data) 
+                    {   
                         APP.displayPost( data );
+                    });
+
+                    $.get('/rest/post/' + id + '/comments', function(data)
+                    {
+                        APP.displayComments( data );
                     });
                 },
 
+                // creation methods
+
+                submituser : function ()
+                {
+                    var name = $('#c_username').val();
+                    var mail = $('#c_email').val();
+
+                    $.ajax
+                    ({
+                        url : "/rest/user",
+                        type: "POST",
+                        data: JSON.stringify({ username: name, email: mail }),
+                        contentType: "application/json",
+                        success: function()
+                            {
+                                alert("nuovo utente creato!")
+                            }
+                    }).fail(function(a,b,c){alert(  a.responseText   )});
+
+                    /*$.post
+                    ( 
+                        '/rest/user', 
+                        {
+                            username: name,
+                            email: mail
+                        }
+                    ).fail(function(a,b,c){alert(  a.responseText   )});*/
+                },
+
+                submitpost : function()
+                {
+                    try
+                    {
+                        APP.submituser();
+                    }
+                    finally
+                    {
+
+                    }
+                },
+
+                submitcomment : function()
+                {
+                    //todo implement
+                },
                 
                 // display methods
 
@@ -125,30 +225,45 @@
 
                     $('#postcontainer').append( pt );
 
+                    APP.currentpost = post['id'];
+                },
+
+                displayComments : function( data )
+                {
+                    $.each( data, function(i,v)
+                    {
+                        var cmt = $('#templates').find('.comment').clone();
+
+                        cmt.find('.postheader').html( '<b>' + v['author']['username'] + '</b> on ' + v['date'] );
+                        cmt.find('.postcontent').html( v['content'] )
+
+                        $('#postcontainer').append( cmt )
+
+                    });
                 },
 
                 displayMany : function ( data, comments )
                 {
                     APP.clear();  
                     $('#pagecount').html(APP.page);
+                    
                     $.each(data,function(i,v)
-                        {
-                            var pt = $('#templates').find('.post').clone();
+                    {
+                        var pt = $('#templates').find('.post').clone();
 
-                            pt.find('.postheader').html( '<b>' + v['author']['username'] + '</b> on ' + v['date'] );
+                        pt.find('.postheader').html( '<b>' + v['author']['username'] + '</b> on ' + v['date'] );
 
-                            pt.find('.postcontent_h').html(v['title'])
-                            pt.find('.postcontent_h').click( function(){APP.loadpost(v['id'])} );
+                        pt.find('.postcontent_h').html(v['title'])
+                        pt.find('.postcontent_h').click( function(){APP.loadpost(v['id'])} );
 
-                            pt.find('.postcontent_p').html(v['content'] + '...');
+                        pt.find('.postcontent_p').html(v['content'] + '...');
 
-                            $('#postcontainer').append( pt );
-                        });
+                        $('#postcontainer').append( pt );
+                    });
                 },
 
 
                 // for malefic testing purposes. 
-
                 test : function()
                 {
                     alert('funzionaaaaa mhuhuhahaha');
@@ -158,13 +273,15 @@
 
             $(document).ready( function() 
             { 
-                APP.laodpage(1,null);
+                APP.changecontext('view');
+                APP.laodpage(0,null);
 
                 // event binding
                 $('#btn_back').click(function(){APP.laodpage(null,false)});
                 $('#btn_forw').click(function(){APP.laodpage(null,true)});
                 $('#pagespan').click(function(){APP.laodpage(0,null)});
                 $('#pagecount').click(function(){APP.laodpage(null,null)});
+                $('#btn_create').click(function(){APP.changecontext('create')});
             });
 
         </script>

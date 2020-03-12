@@ -15,6 +15,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -46,15 +47,23 @@ public class UsersController
         return usersRepo.findByUsername(username);
     }
 
-    @PUT
+    @POST
     @Consumes("application/json")
+    @Produces("application/json")
     public Response createUser( User user )
     {
         if (user == null)
-            return Response.status(HttpStatus.NOT_FOUND.value()).build();
+            return Response.status( Response.Status.BAD_REQUEST ).build();
 
-        usersRepo.saveAndFlush( user );
-        return Response.status(HttpStatus.CREATED.value()).build();
+        if (usersRepo.findByUsername( user.username ) == null)
+        {
+            usersRepo.saveAndFlush( user );
+            return Response.status( Response.Status.CREATED ).build();
+        }
+        else
+        {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
     }
 
 

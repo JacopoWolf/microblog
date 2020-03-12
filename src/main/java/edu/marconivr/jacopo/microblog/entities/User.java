@@ -1,6 +1,6 @@
 package edu.marconivr.jacopo.microblog.entities;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table( name =  "utenti")
+@Table( name = "user" )
 public class User
 {
 
@@ -23,9 +23,13 @@ public class User
     @Basic
     public String email;
 
-    @OneToMany
+    @OneToMany(targetEntity = Post.class)
     @Getter @Setter
-    private List<Post> posts;
+    private Set<Post> posts;
+
+    @OneToMany(targetEntity = Comment.class)
+    @Getter @Setter
+    private Set<Comment> comments;
 
 
     public User () {}

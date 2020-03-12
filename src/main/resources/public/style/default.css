@@ -7,6 +7,12 @@ body
     min-width: 600px;
 }
 
+footer
+{
+    text-align: center;
+    padding: 10px;
+}
+
 div.content
 {
     margin: auto;
@@ -16,6 +22,7 @@ div.content
     display: flex;
     flex-direction: column;
 }
+
 
 div.post h3
 {
@@ -89,5 +96,17 @@ div.post
 div.postheader
 {
     background-color: aliceblue;
-    padding: 3px;
+    padding: 5px;
+}
+
+div.comment
+{
+    padding: 10px;
+}
+
+
+#postcreator .long
+{
+    min-width: 200px;
+    width: 80%;
 }
