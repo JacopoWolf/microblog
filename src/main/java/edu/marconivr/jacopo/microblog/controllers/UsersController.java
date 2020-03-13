@@ -1,29 +1,21 @@
 package edu.marconivr.jacopo.microblog.controllers;
 
 import java.util.List;
-import java.util.logging.Logger;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.entities.repos.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
-@Component
-@Path("/user")
+@Component @Path("/users")
+@Api(tags = {"user"} )
 public class UsersController 
 {
 
@@ -32,6 +24,7 @@ public class UsersController
 
     @GET @Path("/all")
     @Produces("application/json")
+    @ApiOperation(value = "returns all registered users")
     public List<User> getallusers() 
     {
         return usersRepo.findAll();
@@ -39,7 +32,8 @@ public class UsersController
 
     @GET
     @Produces("application/json")
-    public User getById( @QueryParam("name") String username )
+    @ApiOperation( value = "gets an user by its id" )
+    public User getById( @ApiParam @QueryParam("name") String username )
     {
         if (  username == null || username.isEmpty() )
            throw new WebApplicationException( Response.Status.BAD_REQUEST );
@@ -49,8 +43,8 @@ public class UsersController
 
     @POST
     @Consumes("application/json")
-    @Produces("application/json")
-    public Response createUser( User user )
+    @ApiOperation("generates a new user")
+    public Response createUser( @ApiParam User user )
     {
         if (user == null)
             return Response.status( Response.Status.BAD_REQUEST ).build();

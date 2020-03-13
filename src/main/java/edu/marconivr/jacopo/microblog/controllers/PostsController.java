@@ -1,11 +1,6 @@
 package edu.marconivr.jacopo.microblog.controllers;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -20,8 +15,12 @@ import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.entities.repos.PostsRepository;
 import edu.marconivr.jacopo.microblog.entities.repos.UserRepository;
 
-@Component
-@Path("/post")
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
+@Component @Path("/posts")
+@Api(tags =  { "post" })
 public class PostsController
 {
     @Autowired
@@ -30,9 +29,20 @@ public class PostsController
     @Autowired
     private PostsRepository postsRepo;
 
-    @GET
+    @GET 
     @Produces("application/json")
-    public List<Post> getAll( @QueryParam("from") String username, @QueryParam("count") int count , @QueryParam("page") int page, @QueryParam("limitcontent") int limit )
+    @ApiOperation(value = "Returns posts based on specific parameters.")
+    public List<Post> getAllBasedOn
+    ( 
+        @ApiParam( value = "select posts from the user with this specific name" )
+        @QueryParam("from")         String  username, 
+        @ApiParam ( value = "how many posts in this page", defaultValue = "1")
+        @QueryParam("count")        int     count , 
+        @ApiParam ( value = "index of the results page", defaultValue = "0" )
+        @QueryParam("page")         int     page, 
+        @ApiParam (value = "number of characters in the posts content. If not set, returns the whole content.")
+        @QueryParam("limitcontent") int     limit 
+    )
     {
         // preliminary checks
         if (count < 1)
@@ -62,7 +72,8 @@ public class PostsController
 
     @GET @Path("/{id}") 
     @Produces("application/json")
-    public Post getById ( @PathParam("id") Long id )
+    @ApiOperation( value = "Returns a post by its Id" )
+    public Post getById ( @ApiParam @PathParam("id") Long id )
     {
         if (id == null)
             throw new WebApplicationException( Response.Status.BAD_REQUEST );

@@ -1,22 +1,26 @@
 ###
 
-GET http://localhost:8080/rest/post/5
+GET http://localhost:8080/rest/swagger.json
 
 ###
 
-GET http://localhost:8080/rest/post?count=10&page=0&limitcontent=3
+GET http://localhost:8080/rest/posts/5
 
 ###
 
-GET http://localhost:8080/rest/post/5/comments
+GET http://localhost:8080/rest/posts?count=10&page=0&limitcontent=3
 
 ###
 
-GET http://localhost:8080/rest/user?name=qualcuno
+GET http://localhost:8080/rest/posts/5/comments
 
 ###
 
-POST  http://localhost:8080/rest/user
+GET http://localhost:8080/rest/users?name=qualcuno
+
+###
+
+POST  http://localhost:8080/rest/users
 content-type: application/json
 
 {

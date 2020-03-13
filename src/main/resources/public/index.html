@@ -4,86 +4,6 @@
         <title>Microbloggologgo</title>
         <link rel="stylesheet" href="style/default.css">
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-        
-    </head>
-    <body>
-        <div class="options">
-            <button id="btn_back">Indietro</button>
-            <span id="pagespan"><i><b>Page: </b></i></span><span id="pagecount">0</span>
-            <button id="btn_forw">Avanti</button>
-            <button>Cerca</button>
-            <button id="btn_create">Crea</button>
-        </div>
-        <div class="content">
-            <div class="title">
-                <h1>Microbloggologgo</h1>
-            </div>
-            <div class="main" id="postcontainer" style="display: none;">
-
-                <!--content goes here-->
-                
-            </div>
-
-            <!-- post creator -->
-            <div class="main" id="postcreator" style="display: none;">
-                <button style="float: right; position: relative;" onclick="APP.changecontext('view')"><h2>Indietro</h2></button>
-                
-                <h2>Scrivi un post</h2>
-                <div class="line"></div>
-                
-                    nome utente<br> <input type="text" autocomplete="username" id="c_username"><br>
-                    e-mail<br><input type="text" autocomplete="email" id="c_email"><br><br>
-                    TITOLO<br> <input type="text" class="long" id="c_title"><br>
-                    <button style="float: right;" onclick="APP.submitpost()"><h2>Invia</h2></button>
-                    CONTENUTO<br><textarea class="long" rows="20" id="c_content"  style="resize: vertical;"></textarea>
-                
-            </div>
-
-            <footer>
-                <p>Please don't attempt at contacting me since I want to be left alone. Thanks.</p>
-                <p>copyright &copy Comparin Jacopo 2020</p>
-            </footer>
-
-        </div>
-
-        <!-- TEMPLATES for js generation go here -->
-        <div id="templates" style="display: none;">
-        
-            <!-- post when in lib -->
-            <div class="post">
-                <div class="postheader">AUTHOR on DATE</div>
-                <div class="postcontent">
-                    <h3 class="postcontent_h">TITLE</h3>
-                    <p class="postcontent_p">CONTENT</p>
-                </div>
-            </div>
-
-            <!-- post when focused -->
-            <div class="singlepost">
-                <p class="singlepost_h">DATE</p>
-                <div class="singlepostheader">
-                    <b><p class="singlepostheader_usrn">USERNAME</p></b>
-                    <h2 class="singlepostheader_t">TITLE</h2>
-                </div>
-                <div class="singlepostcontent">
-                    <p class="singlepostcontent_p">CONTENT</p>
-                </div>
-                
-                <div class="line"></div>
-
-            </div>
-
-            <!-- comment on focused post -->
-            <div class="comment">
-                <div class="postheader">AUTHOR on DATE</div>
-                <div class="postcontent">CONTENT</div>
-            </div>
-
-            
-
-        </div>
-
-
         <!-- main script -->
         <script>
 
@@ -119,7 +39,7 @@
 
                 // loading methods
 
-                laodpage : function ( page, forw )
+                loadpage : function ( page, forw )
                 {
                     if (page != null)
                         APP.page = page;
@@ -137,8 +57,8 @@
                     var p = parseInt(APP.page);
                     var s = parseInt(APP.pagesize);
 
-                     
-                    $.get( '/rest/post?count=' + s + '&page=' + p + '&limitcontent=' + 40 , function(data)
+                        
+                    $.get( '/rest/posts?count=' + s + '&page=' + p + '&limitcontent=' + 40 , function(data)
                     {
                         APP.displayMany( data )
                     });
@@ -147,12 +67,12 @@
 
                 loadpost : function ( id )
                 {
-                    $.get( '/rest/post/' + id, function(data) 
+                    $.get( '/rest/posts/' + id, function(data) 
                     {   
                         APP.displayPost( data );
                     });
 
-                    $.get('/rest/post/' + id + '/comments', function(data)
+                    $.get('/rest/posts/' + id + '/comments', function(data)
                     {
                         APP.displayComments( data );
                     });
@@ -167,7 +87,7 @@
 
                     $.ajax
                     ({
-                        url : "/rest/user",
+                        url : "/rest/users",
                         type: "POST",
                         data: JSON.stringify({ username: name, email: mail }),
                         contentType: "application/json",
@@ -274,17 +194,91 @@
             $(document).ready( function() 
             { 
                 APP.changecontext('view');
-                APP.laodpage(0,null);
+                APP.loadpage(0,null);
 
                 // event binding
-                $('#btn_back').click(function(){APP.laodpage(null,false)});
-                $('#btn_forw').click(function(){APP.laodpage(null,true)});
-                $('#pagespan').click(function(){APP.laodpage(0,null)});
-                $('#pagecount').click(function(){APP.laodpage(null,null)});
+                $('#btn_back').click(function(){APP.loadpage(null,false)});
+                $('#btn_forw').click(function(){APP.loadpage(null,true)});
+                $('#pagespan').click(function(){APP.loadpage(0,null)});
+                $('#pagecount').click(function(){APP.loadpage(null,null)});
                 $('#btn_create').click(function(){APP.changecontext('create')});
             });
 
         </script>
+    </head>
+    <body>
+        <div class="options">
+            <button id="btn_back">Indietro</button>
+            <span id="pagespan"><i><b>Page: </b></i></span><span id="pagecount">0</span>
+            <button id="btn_forw">Avanti</button>
+            <button>Cerca</button>
+            <button id="btn_create">Crea</button>
+        </div>
+        <div class="content">
+            <div class="title">
+                <h1>Microbloggologgo</h1>
+            </div>
+            <div class="main" id="postcontainer" style="display: none;">
 
+                <!--content goes here-->
+                
+            </div>
+
+            <!-- post creator -->
+            <div class="main" id="postcreator" style="display: none;">
+                <button style="float: right; position: relative;" onclick="APP.changecontext('view')"><h2>Indietro</h2></button>
+                
+                <h2>Scrivi un post</h2>
+                <div class="line"></div>
+                
+                    nome utente<br> <input type="text" autocomplete="username" id="c_username"><br>
+                    e-mail<br><input type="text" autocomplete="email" id="c_email"><br><br>
+                    TITOLO<br> <input type="text" class="long" id="c_title"><br>
+                    <button style="float: right;" onclick="APP.submitpost()"><h2>Invia</h2></button>
+                    CONTENUTO<br><textarea class="long" rows="20" id="c_content"  style="resize: vertical;"></textarea>
+                
+            </div>
+
+            <footer>
+                <p>Please don't attempt at contacting me since I want to be left alone. Thanks.</p>
+                <p>copyright &copy Comparin Jacopo 2020</p>
+            </footer>
+
+        </div>
+
+        <!-- TEMPLATES for js generation go here -->
+        <div id="templates" style="display: none;">
+        
+            <!-- post when in lib -->
+            <div class="post">
+                <div class="postheader">AUTHOR on DATE</div>
+                <div class="postcontent">
+                    <h3 class="postcontent_h">TITLE</h3>
+                    <p class="postcontent_p">CONTENT</p>
+                </div>
+            </div>
+
+            <!-- post when focused -->
+            <div class="singlepost">
+                <p class="singlepost_h">DATE</p>
+                <div class="singlepostheader">
+                    <b><p class="singlepostheader_usrn">USERNAME</p></b>
+                    <h2 class="singlepostheader_t">TITLE</h2>
+                </div>
+                <div class="singlepostcontent">
+                    <p class="singlepostcontent_p">CONTENT</p>
+                </div>
+                
+                <div class="line"></div>
+
+            </div>
+
+            <!-- comment on focused post -->
+            <div class="comment">
+                <div class="postheader">AUTHOR on DATE</div>
+                <div class="postcontent">CONTENT</div>
+            </div>
+
+        </div>
     </body>
 </html>

@@ -5,10 +5,6 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
 @Table( name = "post" )
 public class Post
