@@ -64,7 +64,12 @@ public class PostsController
         }
 
         if (limit > 0)
-            posts.stream().forEach( p -> p.content = p.content.substring(0, (limit < p.content.length()) ? limit : p.content.length() ));
+            posts.stream()
+            .forEach
+            ( 
+                p -> 
+                p.content = p.content.substring(0, Math.min(limit, p.content.length()))
+            );
 
         return posts;
 
