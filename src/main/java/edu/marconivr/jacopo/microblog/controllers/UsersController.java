@@ -49,6 +49,9 @@ public class UsersController
         if (user == null)
             return Response.status( Response.Status.BAD_REQUEST ).build();
 
+        if ( !user.username.matches("[a-zA-Z0-9_-]{3,30}" ) )
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+
         if (usersRepo.findByUsername( user.username ) == null)
         {
             usersRepo.saveAndFlush( user );

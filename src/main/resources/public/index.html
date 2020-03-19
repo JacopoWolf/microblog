@@ -11,7 +11,7 @@
             {
                 // global variables
 
-                pagesize    : 4,
+                pagesize    : 10,
                 page        : 0,
                 currentpage : 'create',
                 currentpost : -1,
@@ -22,6 +22,7 @@
                 {
                     switch (context) {
                         case 'view':
+                            APP.loadpage();
                             $('#postcontainer').css('display','block');
                             $('#postcreator').css('display','none');
                             APP.currentpage = context;
@@ -87,6 +88,7 @@
 
                     $.ajax
                     ({
+                        async: false,
                         url : "/rest/users",
                         type: "POST",
                         data: JSON.stringify({ username: name, email: mail }),
@@ -95,28 +97,30 @@
                             {
                                 alert("nuovo utente creato!")
                             }
-                    }).fail(function(a,b,c){alert(  a.responseText   )});
-
-                    /*$.post
-                    ( 
-                        '/rest/user', 
-                        {
-                            username: name,
-                            email: mail
-                        }
-                    ).fail(function(a,b,c){alert(  a.responseText   )});*/
+                    });
                 },
 
                 submitpost : function()
                 {
-                    try
-                    {
-                        APP.submituser();
-                    }
-                    finally
-                    {
+                    var name = $('#c_username').val();
+                    var title = $('#c_title').val();
+                    var content = $('#c_content').val();
 
-                    }
+
+                    if (title == "")
+                        title = "no title";
+
+                    $.ajax
+                    ({
+                        url : "/rest/posts?from=" + name,
+                        type: "POST",
+                        data: JSON.stringify({ title: title, content: content }),
+                        contentType: "application/json",
+                        success: function()
+                            {
+                                alert("nuovo post creato!")
+                            }
+                    });
                 },
 
                 submitcomment : function()
@@ -202,6 +206,10 @@
                 $('#pagespan').click(function(){APP.loadpage(0,null)});
                 $('#pagecount').click(function(){APP.loadpage(null,null)});
                 $('#btn_create').click(function(){APP.changecontext('create')});
+                $('#btn_createpost').click(function(){
+                    APP.submituser();
+                    APP.submitpost();
+                })
             });
 
         </script>
@@ -234,7 +242,7 @@
                     nome utente<br> <input type="text" autocomplete="username" id="c_username"><br>
                     e-mail<br><input type="text" autocomplete="email" id="c_email"><br><br>
                     TITOLO<br> <input type="text" class="long" id="c_title"><br>
-                    <button style="float: right;" onclick="APP.submitpost()"><h2>Invia</h2></button>
+                    <button style="float: right;" id="btn_createpost"><h2>Invia</h2></button>
                     CONTENUTO<br><textarea class="long" rows="20" id="c_content"  style="resize: vertical;"></textarea>
                 
             </div>

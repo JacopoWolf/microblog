@@ -17,7 +17,7 @@ public class User
     private Long id;
 
     @Basic
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, length = 30)
     public String username;
 
     @Basic

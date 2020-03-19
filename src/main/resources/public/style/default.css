@@ -91,6 +91,12 @@ div.post
     margin: auto;
     margin-bottom: 20px;
     padding: 5px;
+    word-wrap: break-word;
+}
+
+div.singlepost
+{
+    word-wrap: break-word;
 }
 
 div.postheader

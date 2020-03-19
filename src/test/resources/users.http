@@ -13,6 +13,14 @@ POST  http://localhost:8080/rest/users
 content-type: application/json
 
 {
-    "username" : "qualcuniche",
+    "username" : "qualcuno",
     "email" : "qualche@cuno.com"
+}
+###
+POST  http://localhost:8080/rest/posts?from=qualcuno
+Content-type: application/json
+
+{
+    "title" : "Un nuovo post",
+    "content" : "yadda yadda yadda yadda yadda"
 }

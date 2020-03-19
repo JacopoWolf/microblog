@@ -55,12 +55,12 @@ public class PostsController
 
         if ( username == null || username.isEmpty())
         {
-            posts = postsRepo.findAll(PageRequest.of(page, count)).toList();
+            posts = postsRepo.findAll(PageRequest.of(page, count, Sort.by("date").descending())).toList();
         }
         else
         {
             User usr = usersRepo.findByUsername(username);
-            posts = postsRepo.findByAuthor(usr, PageRequest.of(page, count, Sort.by("date")));
+            posts = postsRepo.findByAuthor(usr, PageRequest.of(page, count, Sort.by("date").descending()));
         }
 
         if (limit > 0)
@@ -78,7 +78,11 @@ public class PostsController
     @GET @Path("/{id}") 
     @Produces("application/json")
     @ApiOperation( value = "Returns a post by its Id" )
-    public Post getById ( @ApiParam @PathParam("id") Long id )
+    public Post getById 
+    ( 
+        @ApiParam( value = "the id of the post you want" )
+        @PathParam("id") Long id 
+    )
     {
         if (id == null)
             throw new WebApplicationException( Response.Status.BAD_REQUEST );
@@ -91,9 +95,33 @@ public class PostsController
         {
             throw new WebApplicationException( Response.Status.NOT_FOUND );
         }
-        
-        
     }
     
+
+    @POST
+    @Consumes("application/json")
+    @ApiOperation( "Create a new post" )
+    public Response createNew 
+    ( 
+        @ApiParam(value = "the username if the user who created this post")
+        @QueryParam("from") String username, 
+        @ApiParam (value = "the post to submit")
+        Post post 
+    )
+    {
+        if (post == null || username == null)
+            return Response.status( Response.Status.BAD_REQUEST ).build();
+
+        User user = usersRepo.findByUsername(username);
+        if (user == null)
+            return Response.status( Response.Status.NOT_FOUND ).build();
+
+        post.date = new Date();
+        post.author = user;
+
+        postsRepo.saveAndFlush( post );
+
+        return Response.status(Response.Status.CREATED).build();
+    }
 
 }
