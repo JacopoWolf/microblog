@@ -3,212 +3,31 @@
     <head>
         <title>Microbloggologgo</title>
         <link rel="stylesheet" href="style/default.css">
+
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-        <!-- main script -->
+
+        <script src="scripts/app.js"></script>
+        <script src="scripts/display.js"></script>
+        <script src="scripts/restinterface.js"></script>
+
         <script>
-
-            var APP = 
-            {
-                // global variables
-
-                pagesize    : 10,
-                page        : 0,
-                currentpage : 'create',
-                currentpost : -1,
-
-                // pages methods
-
-                changecontext : function(context)
-                {
-                    switch (context) {
-                        case 'view':
-                            APP.loadpage();
-                            $('#postcontainer').css('display','block');
-                            $('#postcreator').css('display','none');
-                            APP.currentpage = context;
-                            break;
-
-                        case 'create':
-                            $('#postcontainer').css('display','none');
-                            $('#postcreator').css('display','block');
-                            APP.currentpage = context;
-                            break;
-                        default:
-                            break;
-                    }
-                },
-
-                // loading methods
-
-                loadpage : function ( page, forw )
-                {
-                    if (page != null)
-                        APP.page = page;
-
-                    // controlla la validità delle variabili
-                    if (forw != null)
-                        if (forw)
-                            APP.page+=1;
-                        else
-                            APP.page-=1;
-
-                    if (APP.page < 0)
-                        APP.page = 0;
-
-                    var p = parseInt(APP.page);
-                    var s = parseInt(APP.pagesize);
-
-                        
-                    $.get( '/rest/posts?count=' + s + '&page=' + p + '&limitcontent=' + 40 , function(data)
-                    {
-                        APP.displayMany( data )
-                    });
-
-                },
-
-                loadpost : function ( id )
-                {
-                    $.get( '/rest/posts/' + id, function(data) 
-                    {   
-                        APP.displayPost( data );
-                    });
-
-                    $.get('/rest/posts/' + id + '/comments', function(data)
-                    {
-                        APP.displayComments( data );
-                    });
-                },
-
-                // creation methods
-
-                submituser : function ()
-                {
-                    var name = $('#c_username').val();
-                    var mail = $('#c_email').val();
-
-                    $.ajax
-                    ({
-                        async: false,
-                        url : "/rest/users",
-                        type: "POST",
-                        data: JSON.stringify({ username: name, email: mail }),
-                        contentType: "application/json",
-                        success: function()
-                            {
-                                alert("nuovo utente creato!")
-                            }
-                    });
-                },
-
-                submitpost : function()
-                {
-                    var name = $('#c_username').val();
-                    var title = $('#c_title').val();
-                    var content = $('#c_content').val();
-
-
-                    if (title == "")
-                        title = "no title";
-
-                    $.ajax
-                    ({
-                        url : "/rest/posts?from=" + name,
-                        type: "POST",
-                        data: JSON.stringify({ title: title, content: content }),
-                        contentType: "application/json",
-                        success: function()
-                            {
-                                alert("nuovo post creato!")
-                            }
-                    });
-                },
-
-                submitcomment : function()
-                {
-                    //todo implement
-                },
-                
-                // display methods
-
-                clear : function ()
-                {
-                    $("#postcontainer").html("");
-                },
-
-                displayPost : function( post )
-                {
-                    APP.clear();
-                    $('#pagecount').html( '<i><b>(' + APP.page + ')</b></i>' );
-
-                    var pt = $('#templates').find('.singlepost').clone();
-
-                    pt.find('.singlepost_h').html( post['date'] );
-                    pt.find('.singlepostheader_usrn').html( post['author']['username'] );
-                    pt.find('.singlepostheader_t').html( post['title'] );
-                    pt.find('.singlepostcontent_p').html( post['content'] );
-
-                    $('#postcontainer').append( pt );
-
-                    APP.currentpost = post['id'];
-                },
-
-                displayComments : function( data )
-                {
-                    $.each( data, function(i,v)
-                    {
-                        var cmt = $('#templates').find('.comment').clone();
-
-                        cmt.find('.postheader').html( '<b>' + v['author']['username'] + '</b> on ' + v['date'] );
-                        cmt.find('.postcontent').html( v['content'] )
-
-                        $('#postcontainer').append( cmt )
-
-                    });
-                },
-
-                displayMany : function ( data, comments )
-                {
-                    APP.clear();  
-                    $('#pagecount').html(APP.page);
-                    
-                    $.each(data,function(i,v)
-                    {
-                        var pt = $('#templates').find('.post').clone();
-
-                        pt.find('.postheader').html( '<b>' + v['author']['username'] + '</b> on ' + v['date'] );
-
-                        pt.find('.postcontent_h').html(v['title'])
-                        pt.find('.postcontent_h').click( function(){APP.loadpost(v['id'])} );
-
-                        pt.find('.postcontent_p').html(v['content'] + '...');
-
-                        $('#postcontainer').append( pt );
-                    });
-                },
-
-
-                // for malefic testing purposes. 
-                test : function()
-                {
-                    alert('funzionaaaaa mhuhuhahaha');
-                }
-
-            }
 
             $(document).ready( function() 
             { 
-                APP.changecontext('view');
-                APP.loadpage(0,null);
+                DISPLAY.changecontext('view');
+                REST.loadpage(0,null);
 
                 // event binding
-                $('#btn_back').click(function(){APP.loadpage(null,false)});
-                $('#btn_forw').click(function(){APP.loadpage(null,true)});
-                $('#pagespan').click(function(){APP.loadpage(0,null)});
-                $('#pagecount').click(function(){APP.loadpage(null,null)});
-                $('#btn_create').click(function(){APP.changecontext('create')});
+                $('#btn_back').click(function(){REST.loadpage(null,false)});
+                $('#btn_forw').click(function(){REST.loadpage(null,true)});
+                $('#pagespan').click(function(){REST.loadpage(0,null)});
+                $('#pagecount').click(function(){REST.loadpage(null,null)});
+
+                $('#btn_create').click(function(){DISPLAY.changecontext('create')});
+                $('#btn_nocreate').click(function(){DISPLAY.changecontext('view')});
                 $('#btn_createpost').click(function(){
-                    APP.submituser();
-                    APP.submitpost();
+                    REST.submituser();
+                    REST.submitpost();
                 })
             });
 
@@ -234,7 +53,7 @@
 
             <!-- post creator -->
             <div class="main" id="postcreator" style="display: none;">
-                <button style="float: right; position: relative;" onclick="APP.changecontext('view')"><h2>Indietro</h2></button>
+                <button style="float: right; position: relative;" id="btn_nocreate" ><h2>Indietro</h2></button>
                 
                 <h2>Scrivi un post</h2>
                 <div class="line"></div>
