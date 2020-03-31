@@ -6,32 +6,9 @@
 
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
 
-        <script src="scripts/app.js"></script>
-        <script src="scripts/display.js"></script>
-        <script src="scripts/restinterface.js"></script>
+        <!-- compiled typescript application -->
+        <script src="index.js"></script>
 
-        <script>
-
-            $(document).ready( function() 
-            { 
-                DISPLAY.changecontext('view');
-                REST.loadpage(0,null);
-
-                // event binding
-                $('#btn_back').click(function(){REST.loadpage(null,false)});
-                $('#btn_forw').click(function(){REST.loadpage(null,true)});
-                $('#pagespan').click(function(){REST.loadpage(0,null)});
-                $('#pagecount').click(function(){REST.loadpage(null,null)});
-
-                $('#btn_create').click(function(){DISPLAY.changecontext('create')});
-                $('#btn_nocreate').click(function(){DISPLAY.changecontext('view')});
-                $('#btn_createpost').click(function(){
-                    REST.submituser();
-                    REST.submitpost();
-                })
-            });
-
-        </script>
     </head>
     <body>
         <div class="options">
