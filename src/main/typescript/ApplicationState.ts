@@ -8,34 +8,11 @@ type ViewLocation = 'create' | 'view';
  */
 class ApplicationState
 {
-    public pageSize    = 10;
-    public pageNumber  = 0;
-    public contentMaxLengthInView = 40;
+    pageSize    = 10;
+    pageNumber  = 0;
+    contentMaxLengthInView = 40;
 
-    private _currentLocation : ViewLocation = 'create';
+    currentLocation : ViewLocation = 'create';
 
-    public lastPostId  = -1;
-
-
-
-    get currentLocation() : ViewLocation
-    {
-        return this._currentLocation;
-        
-    }
-    set currentLocation( value : ViewLocation )
-    {
-        switch (value)
-        {
-            case 'view':
-                //todo add view stuff
-                break;
-            case 'create':
-                //todo add create stuff
-                break;
-            
-        }
-        this._currentLocation = value;
-
-    }
+    lastPostId  = -1;
 }

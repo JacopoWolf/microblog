@@ -1,54 +1,61 @@
-
-type PageHandler = ( data : Post[] ) => void
-type PostHandler = ( post : Post ) => void
-type SuccessHandler = () => void
-
 /**
  * manages access to the REST api at /rest/
+ * completely asynchronous 
  */
 class ApiAccess
 {
-    state : ApplicationState;
-
-
-    constructor ( state : ApplicationState )
+    // GET methods
+    async getPage(state: ApplicationState): Promise<Post[]>
     {
-        this.state = state;
+        let query =
+            '/rest/posts' +
+            '?count=' + state.pageSize +
+            '&page=' + state.pageNumber +
+            '&limitcontent=' + state.contentMaxLengthInView;
+
+        return await $.get(query);
     }
 
-
-    getPage( handler : PageHandler )
-    {
-        let query = 
-            '/rest/posts' + 
-            '?count=' + this.state.pageSize + 
-            '&page=' + this.state.pageNumber + 
-            '&limitcontent=' + this.state.contentMaxLengthInView;
-
-        $.get( query, handler );
-    }
-
-    getPost( postId : number, handler : PostHandler )
+    async getPost(postId: number): Promise<Post>
     {
         let query = '/rest/posts/' + postId;
 
-        $.get( query, handler );
+        return await $.get(query);
     }
 
-
-    submitPost( newPost : Post, handler : SuccessHandler )
+    async getPostComments(postId: number)
     {
-        $.ajax
-        ({
-            url : "/rest/posts?from=" + newPost.author.username,
-            type: "POST",
-            data: JSON.stringify({ title: newPost.title, content: newPost.content }),
-            contentType: "application/json",
-            success: handler
-        });
+        let query = '/rest/posts/' + postId + '/comments';
+        return await $.get(query);
     }
 
-    submitComment( from : User, underPostId : number, content : string, handler : SuccessHandler )
+
+    // POST methods
+    //? those might use a callback for success or failure
+
+    async submitUser(newUser: User): Promise<void>
+    {
+        return await $.ajax
+            ({
+                url: "/rest/users",
+                type: "POST",
+                data: JSON.stringify({ username: newUser.username, email: newUser.email }),
+                contentType: "application/json",
+            });
+    }
+
+    async submitPost(newPost: Post): Promise<void>
+    {
+        return await $.ajax
+            ({
+                url: "/rest/posts?from=" + newPost.author?.username,
+                type: "POST",
+                data: JSON.stringify({ title: newPost.title, content: newPost.content }),
+                contentType: "application/json",
+            });
+    }
+
+    async submitComment(from: User, underPostId: number, content: string): Promise<void>
     {
         //todo implement ajax call
     }
