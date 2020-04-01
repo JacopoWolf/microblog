@@ -23,7 +23,7 @@ class ApiAccess
         return await $.get(query);
     }
 
-    async getPostComments(postId: number)
+    async getPostComments(postId: number) : Promise<PostComment[]>
     {
         let query = '/rest/posts/' + postId + '/comments';
         return await $.get(query);

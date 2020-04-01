@@ -18,41 +18,23 @@ class App
 
 
         //      EVENT BINDING
-        $('#btn_back').click(() => { this._state.pageNumber--; this.updateView(); });   // previous page
-        $('#btn_forw').click(() => { this._state.pageNumber++; this.updateView(); });   // next page
-        $('#pagespan').click(() => { this._state.pageNumber = 0; this.updateView(); });   // return to main page
-        $('#pagecount').click(() => { this.updateView(); });       //reload
+        
+        // previous page, can't get below 0
+        $('#btn_back').click(() => { if ( --this._state.pageNumber < 0) this._state.pageNumber = 0 ; this.updateView(); });
+        // next page
+        $('#btn_forw').click(() => { ++this._state.pageNumber; this.updateView(); });   
+        // return to first page
+        $('#pagespan').click(() => { this._state.pageNumber = 0; this.updateView(); });   
+        // refresh
+        $('#pagecount').click(() => { this.updateView(); });                            
 
-        $('#btn_create').click(() => { this._view.currentLocation = "create"; });      // post creation mode
-        $('#btn_nocreate').click(() => { this._view.currentLocation = "view"; });      // get back to viewing posts
+        // post creation mode
+        $('#btn_create').click(() => { this._view.currentLocation = "create"; });      
+        // get back to viewing posts
+        $('#btn_nocreate').click(() => { this._view.currentLocation = "view"; this.updateView() });      
 
-        //todo move to its own function
-        $('#btn_createpost').click(async () =>    // submits a new post
-        {
-            let user: User =
-            {
-                username: <string>$('#c_username').val(),
-                email: <string>$('#c_email').val()
-            };
-
-            await this._api.submitUser(user);
-            //alert('creato un novo utente!');
-
-
-            let post: Post =
-            {
-                title: <string>$('#c_title').val(),
-                content: <string>$('#c_content').val(),
-                author: user,
-
-                // assigned by the Server
-                date: undefined,
-                id: undefined
-            };
-
-            await this._api.submitPost(post);
-            alert('creato un nuovo post!');
-        });
+        // submits a new user and post
+        $('#btn_createpost').click(async () => { this.submitUserAndPost(); });         
 
     }
 
@@ -67,5 +49,41 @@ class App
 
         );
     }
+
+
+    async submitUserAndPost()
+    {
+        let user: User =
+        {
+            username: <string>$('#c_username').val(),
+            email: <string>$('#c_email').val()
+        };
+
+        try
+        {
+            await this._api.submitUser(user);
+            alert('creato un novo utente!');
+        }
+        catch
+        {
+            console.log('utente esistente')
+        }
+        
+
+
+        let post: Post =
+        {
+            title: <string>$('#c_title').val(),
+            content: <string>$('#c_content').val(),
+            author: user,
+
+            // assigned by the Server
+            date: undefined,
+            id: undefined
+        };
+
+        await this._api.submitPost(post);
+        alert('creato un nuovo post!');
+    }    
 
 }

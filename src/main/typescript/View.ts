@@ -54,7 +54,15 @@ class View
             pt.find('.postheader').html('<br>' + post.author?.username + '</b> on ' + post.date);
             // title
             pt.find('.postcontent_h').html(post.title);
-            pt.find('.postcontent_h').click(async () => { this.displaySingle(await this._api.getPost(<number>post.id)); });
+            pt.find('.postcontent_h').click
+                (
+                    //* used to load a single post
+                    async () => 
+                    {
+                        this.displaySingle(await this._api.getPost(<number>post.id));
+                        this.displayComments(await this._api.getPostComments(<number>post.id));
+                    }
+                );
             // content
             let contentEnd = (post.content.length < this._state.contentMaxLengthInView) ? '' : '...';
             pt.find('.postcontent_p').html(post.content + contentEnd);
@@ -92,6 +100,19 @@ class View
 
     }
 
+    displayComments(comments: PostComment[])
+    {
+        $.each(comments, (i, comment) =>
+        {
+            let cmt = $('#templates').find('.comment').clone();
+
+            cmt.find('.postheader').html('<b>' + comment.author?.username + '</b> on ' + comment.date);
+            cmt.find('.postcontent').html(comment.content);
+
+            $('#postcontainer').append(cmt);
+
+        });
+    }
 
     // utilities
 

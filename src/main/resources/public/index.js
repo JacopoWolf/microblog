@@ -139,25 +139,54 @@ var App = /** @class */ (function () {
         this._view.currentLocation = "view";
         this.updateView();
         //      EVENT BINDING
-        $('#btn_back').click(function () { _this._state.pageNumber--; _this.updateView(); }); // previous page
-        $('#btn_forw').click(function () { _this._state.pageNumber++; _this.updateView(); }); // next page
-        $('#pagespan').click(function () { _this._state.pageNumber = 0; _this.updateView(); }); // return to main page
-        $('#pagecount').click(function () { _this.updateView(); }); //reload
-        $('#btn_create').click(function () { _this._view.currentLocation = "create"; }); // post creation mode
-        $('#btn_nocreate').click(function () { _this._view.currentLocation = "view"; }); // get back to viewing posts
-        //todo move to its own function
-        $('#btn_createpost').click(function () { return __awaiter(_this, void 0, void 0, function () {
-            var user, post;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+        // previous page, can't get below 0
+        $('#btn_back').click(function () { if (--_this._state.pageNumber < 0)
+            _this._state.pageNumber = 0; _this.updateView(); });
+        // next page
+        $('#btn_forw').click(function () { ++_this._state.pageNumber; _this.updateView(); });
+        // return to first page
+        $('#pagespan').click(function () { _this._state.pageNumber = 0; _this.updateView(); });
+        // refresh
+        $('#pagecount').click(function () { _this.updateView(); });
+        // post creation mode
+        $('#btn_create').click(function () { _this._view.currentLocation = "create"; });
+        // get back to viewing posts
+        $('#btn_nocreate').click(function () { _this._view.currentLocation = "view"; _this.updateView(); });
+        // submits a new user and post
+        $('#btn_createpost').click(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+            this.submitUserAndPost();
+            return [2 /*return*/];
+        }); }); });
+    }
+    App.prototype.updateView = function () {
+        var _this = this;
+        $.when(this._api
+            .getPage(this._state)
+            .then(function (posts) { _this._view.displayMany(posts); }));
+    };
+    App.prototype.submitUserAndPost = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, _a, post;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         user = {
                             username: $('#c_username').val(),
                             email: $('#c_email').val()
                         };
-                        return [4 /*yield*/, this._api.submitUser(user)];
+                        _b.label = 1;
                     case 1:
-                        _a.sent();
+                        _b.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this._api.submitUser(user)];
+                    case 2:
+                        _b.sent();
+                        alert('creato un novo utente!');
+                        return [3 /*break*/, 4];
+                    case 3:
+                        _a = _b.sent();
+                        console.log('utente esistente');
+                        return [3 /*break*/, 4];
+                    case 4:
                         post = {
                             title: $('#c_title').val(),
                             content: $('#c_content').val(),
@@ -167,19 +196,13 @@ var App = /** @class */ (function () {
                             id: undefined
                         };
                         return [4 /*yield*/, this._api.submitPost(post)];
-                    case 2:
-                        _a.sent();
+                    case 5:
+                        _b.sent();
                         alert('creato un nuovo post!');
                         return [2 /*return*/];
                 }
             });
-        }); });
-    }
-    App.prototype.updateView = function () {
-        var _this = this;
-        $.when(this._api
-            .getPage(this._state)
-            .then(function (posts) { _this._view.displayMany(posts); }));
+        });
     };
     return App;
 }());
@@ -237,16 +260,25 @@ var View = /** @class */ (function () {
             pt.find('.postheader').html('<br>' + ((_a = post.author) === null || _a === void 0 ? void 0 : _a.username) + '</b> on ' + post.date);
             // title
             pt.find('.postcontent_h').html(post.title);
-            pt.find('.postcontent_h').click(function () { return __awaiter(_this, void 0, void 0, function () { var _a; return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = this.displaySingle;
-                        return [4 /*yield*/, this._api.getPost(post.id)];
-                    case 1:
-                        _a.apply(this, [_b.sent()]);
-                        return [2 /*return*/];
-                }
-            }); }); });
+            pt.find('.postcontent_h').click(
+            //* used to load a single post
+            function () { return __awaiter(_this, void 0, void 0, function () {
+                var _a, _b;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            _a = this.displaySingle;
+                            return [4 /*yield*/, this._api.getPost(post.id)];
+                        case 1:
+                            _a.apply(this, [_c.sent()]);
+                            _b = this.displayComments;
+                            return [4 /*yield*/, this._api.getPostComments(post.id)];
+                        case 2:
+                            _b.apply(this, [_c.sent()]);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
             // content
             var contentEnd = (post.content.length < _this._state.contentMaxLengthInView) ? '' : '...';
             pt.find('.postcontent_p').html(post.content + contentEnd);
@@ -269,6 +301,15 @@ var View = /** @class */ (function () {
         pt.find('.singlepostcontent_p').html(post.content);
         $('#postcontainer').append(pt);
         this._state.lastPostId = post.id;
+    };
+    View.prototype.displayComments = function (comments) {
+        $.each(comments, function (i, comment) {
+            var _a;
+            var cmt = $('#templates').find('.comment').clone();
+            cmt.find('.postheader').html('<b>' + ((_a = comment.author) === null || _a === void 0 ? void 0 : _a.username) + '</b> on ' + comment.date);
+            cmt.find('.postcontent').html(comment.content);
+            $('#postcontainer').append(cmt);
+        });
     };
     // utilities
     View.prototype.clear = function () {
