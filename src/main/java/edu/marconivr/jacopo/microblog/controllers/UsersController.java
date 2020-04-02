@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.User;
-import edu.marconivr.jacopo.microblog.entities.repos.UserRepository;
+import edu.marconivr.jacopo.microblog.services.IUsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -18,16 +18,16 @@ import io.swagger.annotations.ApiParam;
 @Api(tags = {"user"} )
 public class UsersController 
 {
-
     @Autowired
-    private UserRepository usersRepo;
+    private IUsersService usersService;
+
 
     @GET @Path("/all")
     @Produces("application/json")
     @ApiOperation(value = "returns all registered users")
-    public List<User> getallusers() 
+    public List<User> getAllUsers() 
     {
-        return usersRepo.findAll();
+        return this.usersService.getAll();
     }
 
     @GET
@@ -38,7 +38,7 @@ public class UsersController
         if (  username == null || username.isEmpty() )
            throw new WebApplicationException( Response.Status.BAD_REQUEST );
 
-        return usersRepo.findByUsername(username);
+        return this.usersService.getByNickname(username);
     }
 
     @POST
@@ -47,21 +47,10 @@ public class UsersController
     public Response createUser( @ApiParam User user )
     {
         if (user == null)
-            return Response.status( Response.Status.BAD_REQUEST ).build();
+            throw new WebApplicationException( Response.Status.BAD_REQUEST );
 
-        if ( !user.username.matches("[a-zA-Z0-9_-]{3,30}" ) )
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-
-        if (usersRepo.findByUsername( user.username ) == null)
-        {
-            usersRepo.saveAndFlush( user );
-            return Response.status( Response.Status.CREATED ).build();
-        }
-        else
-        {
-            return Response.status(Response.Status.CONFLICT).build();
-        }
+        this.usersService.createNew(user);
+        return Response.status( Response.Status.CREATED ).build();
     }
-
 
 }

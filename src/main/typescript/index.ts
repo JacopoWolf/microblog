@@ -1,6 +1,8 @@
-let app : App;
 
-$(document).ready(function()
+var app : App;
+
+// main entry point
+$(document).ready( () =>
 {
     app = new App();
 });

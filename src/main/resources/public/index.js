@@ -318,6 +318,7 @@ var View = /** @class */ (function () {
     return View;
 }());
 var app;
+// main entry point
 $(document).ready(function () {
     app = new App();
 });
