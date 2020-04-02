@@ -33,7 +33,7 @@ public class UsersController
     @GET
     @Produces("application/json")
     @ApiOperation( value = "gets an user by its id" )
-    public User getById( @ApiParam @QueryParam("name") String username )
+    public User getByUsername( @ApiParam @QueryParam("name") String username )
     {
         if (  username == null || username.isEmpty() )
            throw new WebApplicationException( Response.Status.BAD_REQUEST );
