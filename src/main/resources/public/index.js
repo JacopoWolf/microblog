@@ -140,20 +140,20 @@ var App = /** @class */ (function () {
         this.updateView();
         //      EVENT BINDING
         // previous page, can't get below 0
-        $('#btn_back').click(function () { if (--_this._state.pageNumber < 0)
+        $(PAGE.backButton).click(function () { if (--_this._state.pageNumber < 0)
             _this._state.pageNumber = 0; _this.updateView(); });
         // next page
-        $('#btn_forw').click(function () { ++_this._state.pageNumber; _this.updateView(); });
+        $(PAGE.forwardButton).click(function () { ++_this._state.pageNumber; _this.updateView(); });
         // return to first page
-        $('#pagespan').click(function () { _this._state.pageNumber = 0; _this.updateView(); });
+        $(PAGE.resetButton).click(function () { _this._state.pageNumber = 0; _this.updateView(); });
         // refresh
-        $('#pagecount').click(function () { _this.updateView(); });
+        $(PAGE.reloadButton).click(function () { _this.updateView(); });
         // post creation mode
-        $('#btn_create').click(function () { _this._view.currentLocation = "create"; });
+        $(PAGE.createPostViewButton).click(function () { _this._view.currentLocation = "create"; });
         // get back to viewing posts
-        $('#btn_nocreate').click(function () { _this._view.currentLocation = "view"; _this.updateView(); });
+        $(PAGE.normalViewButton).click(function () { _this._view.currentLocation = "view"; _this.updateView(); });
         // submits a new user and post
-        $('#btn_createpost').click(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+        $(PAGE.createPostViewButton).click(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
             this.submitUserAndPost();
             return [2 /*return*/];
         }); }); });
@@ -316,6 +316,22 @@ var View = /** @class */ (function () {
         $('#postcontainer').html('');
     };
     return View;
+}());
+/**
+ * static collection of aliases to access elements in the html view
+ * @static
+ */
+var PAGE = /** @class */ (function () {
+    function PAGE() {
+    }
+    PAGE.backButton = '#btn_back';
+    PAGE.forwardButton = '#btn_forw';
+    PAGE.reloadButton = '#btn_reload';
+    PAGE.resetButton = '#btn_reset';
+    PAGE.createPostViewButton = '#btn_create';
+    PAGE.normalViewButton = '#btn_nocreate';
+    PAGE.submitPostButton = '#btn_createpost';
+    return PAGE;
 }());
 var app;
 // main entry point

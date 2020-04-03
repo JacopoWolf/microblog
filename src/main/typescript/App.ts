@@ -20,21 +20,21 @@ class App
         //      EVENT BINDING
         
         // previous page, can't get below 0
-        $('#btn_back').click(() => { if ( --this._state.pageNumber < 0) this._state.pageNumber = 0 ; this.updateView(); });
+        $(PAGE.backButton).click(() => { if ( --this._state.pageNumber < 0) this._state.pageNumber = 0 ; this.updateView(); });
         // next page
-        $('#btn_forw').click(() => { ++this._state.pageNumber; this.updateView(); });   
+        $(PAGE.forwardButton).click(() => { ++this._state.pageNumber; this.updateView(); });   
         // return to first page
-        $('#pagespan').click(() => { this._state.pageNumber = 0; this.updateView(); });   
+        $(PAGE.resetButton).click(() => { this._state.pageNumber = 0; this.updateView(); });   
         // refresh
-        $('#pagecount').click(() => { this.updateView(); });                            
+        $(PAGE.reloadButton).click(() => { this.updateView(); });                            
 
         // post creation mode
-        $('#btn_create').click(() => { this._view.currentLocation = "create"; });      
+        $(PAGE.createPostViewButton).click(() => { this._view.currentLocation = "create"; });      
         // get back to viewing posts
-        $('#btn_nocreate').click(() => { this._view.currentLocation = "view"; this.updateView() });      
+        $(PAGE.normalViewButton).click(() => { this._view.currentLocation = "view"; this.updateView() });      
 
         // submits a new user and post
-        $('#btn_createpost').click(async () => { this.submitUserAndPost(); });         
+        $(PAGE.createPostViewButton).click(async () => { this.submitUserAndPost(); });         
 
     }
 

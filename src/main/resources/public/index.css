@@ -1,0 +1,139 @@
+/* general body settings */
+body{
+    background-color: #E5E5F3;
+    padding: 0;
+    margin: 0;
+}
+
+.content{
+    margin: auto;
+
+    width: 75%;
+    min-height: 50px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* header settings */
+header{
+    background-color: #495867 ;
+    color: whitesmoke;
+
+    position: -webkit-sticky;
+    position: sticky;
+
+    top: 0;
+
+    min-height: 75px;
+}
+
+header h1{
+    float: left;
+    margin-left: 5%;
+    font-family: monospace;
+}
+
+header #options{
+    height: 100%;
+    float: right;
+    margin-right: 5%;
+    vertical-align: middle;
+}
+
+header #navigation{
+    height: 100%;
+
+    position: absolute;
+
+    vertical-align: middle;
+    right: 50%;
+    transform: translateX(50%);
+}
+
+footer{
+    text-align: center;
+    padding: 20px;
+}
+
+/* general button settings */
+
+button{
+    background-color: #577399;
+    color: whitesmoke;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    transition: all .2s linear;
+}
+
+button:hover{
+    background-color: #E5E5F3;
+    color: black;
+    box-shadow: 2px 2px #577399;
+}
+
+button:active{
+    background-color: springgreen !important;
+    transition: 0s;
+}
+
+
+/* main content settings */
+.main{
+    min-height: 100px;
+    background-color: #BDD5EA ;
+}
+
+div.post{
+    width: 70%;
+    background-color: white;
+    
+    float: left;
+
+    margin: 10px 15% 10px 15% ;
+    /*margin-bottom: 20px;
+    margin-top: 10px;*/
+
+    padding: 5px;
+    word-wrap: break-word;
+}
+
+div.singlepost{
+    margin: 10px;
+    word-wrap: break-word;
+    background-color: white;
+    padding: 20px;
+}
+
+div.singlepostheader, div.postheader{
+    color: whitesmoke;
+    background-color: #6D7985;
+    padding: 10px;
+}
+
+div.comment div{
+    background-color: whitesmoke;
+    padding: 5px;
+}
+
+div.postcontent  h3 {
+    font-weight: bold;
+    cursor: alias;
+}
+
+div.comment
+{
+    padding: 10px;
+}
+
+
+
+/* utils */
+.line {
+    height: 1px;
+    width: 95%;
+    background-color: black;
+    margin: auto;
+}

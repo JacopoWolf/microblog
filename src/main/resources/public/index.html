@@ -1,47 +1,60 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Microbloggologgo</title>
-        <link rel="stylesheet" href="style/default.css">
 
+    <head>
+
+        <title>Jacopo's Microblog</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- styles -->
+        <link rel="stylesheet" href="index.css">
+
+        <!-- jQuery -->
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
 
         <!-- compiled typescript application -->
         <script src="index.js"></script>
 
     </head>
+
     <body>
-        <div class="options">
-            <button id="btn_back">Indietro</button>
-            <span id="pagespan"><i><b>Page: </b></i></span><span id="pagecount">0</span>
-            <button id="btn_forw">Avanti</button>
-            <button>Cerca</button>
-            <button id="btn_create">Crea</button>
-        </div>
+
+        <header>
+            <h1>Microblog</h1>
+            <div id="navigation">
+                <p>
+                    <button id="btn_back">&triangleleft;Precedente</button>
+                    <button id="btn_reset">Principale</button>
+                    <button> &#x1F50D; <del>Cerca</del></button>
+                    <button id="btn_reload">Aggiorna</button>
+                    <button id="btn_forw">Prossimo&triangleright;</button>
+                </p>
+            </div>
+            <div id="options">
+                <p>
+                    <button id='btn_create'>Nuovo Post</button>
+                    Pagina <b><span id="pagecount">0</span></b>
+                </p>
+            </div>
+        </header>
+
         <div class="content">
-            <div class="title">
-                <h1>Microbloggologgo</h1>
-            </div>
-            <div class="main" id="postcontainer" style="display: none;">
+            
+            <div class="main" id="postcontainer" >
 
-                <!--content goes here-->
-                
+                <!-- view content goes here -->
+
             </div>
 
-            <!-- post creator -->
+            <!-- used to create new posts -->
             <div class="main" id="postcreator" style="display: none;">
-                <button style="float: right; position: relative;" id="btn_nocreate" ><h2>Indietro</h2></button>
-                
                 <h2>Scrivi un post</h2>
-                <div class="line"></div>
-                
-                    nome utente<br> <input type="text" autocomplete="username" id="c_username"><br>
-                    e-mail<br><input type="text" autocomplete="email" id="c_email"><br><br>
-                    TITOLO<br> <input type="text" class="long" id="c_title"><br>
-                    <button style="float: right;" id="btn_createpost"><h2>Invia</h2></button>
-                    CONTENUTO<br><textarea class="long" rows="20" id="c_content"  style="resize: vertical;"></textarea>
-                
+                <div class="line">
+                </div>
+                <button id=btn_nocreate>Go Back (temporary)</button>
             </div>
+
+
 
             <footer>
                 <p>Please don't attempt at contacting me since I want to be left alone. Thanks.</p>
@@ -50,9 +63,10 @@
 
         </div>
 
+
         <!-- TEMPLATES for js generation go here -->
         <div id="templates" style="display: none;">
-        
+
             <!-- post when in lib -->
             <div class="post">
                 <div class="postheader">AUTHOR on DATE</div>
@@ -64,25 +78,26 @@
 
             <!-- post when focused -->
             <div class="singlepost">
-                <p class="singlepost_h">DATE</p>
                 <div class="singlepostheader">
-                    <b><p class="singlepostheader_usrn">USERNAME</p></b>
-                    <h2 class="singlepostheader_t">TITLE</h2>
+                    <b>by <span class="singlepostheader_usrn">USERNAME</span></b>
+                    - <span class="singlepost_h">DATE</span><br>
                 </div>
+                <h2 class="singlepostheader_t">TITLE</h2>
+                <div class="line"></div>
                 <div class="singlepostcontent">
                     <p class="singlepostcontent_p">CONTENT</p>
                 </div>
-                
-                <div class="line"></div>
-
             </div>
 
             <!-- comment on focused post -->
             <div class="comment">
-                <div class="postheader">AUTHOR on DATE</div>
-                <div class="postcontent">CONTENT</div>
+                <div><span class="postheader">by AUTHOR - DATE</div>
+                <div><span class="postcontent">CONTENT</span></div>
             </div>
 
         </div>
+        
+
     </body>
+
 </html>
