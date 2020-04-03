@@ -11,8 +11,6 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-
 import edu.marconivr.jacopo.microblog.security.services.IUserAuthService;
 
 //todo document

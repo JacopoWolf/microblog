@@ -122,9 +122,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
     //*
     @Bean
-    FilterRegistrationBean disableAutoRegistration( TokenAuthFilter filter )
+    FilterRegistrationBean<?> disableAutoRegistration( TokenAuthFilter filter )
     {
-        FilterRegistrationBean registration = new FilterRegistrationBean<>(filter);
+        FilterRegistrationBean<?> registration = new FilterRegistrationBean<>(filter);
             registration.setEnabled(false);
         return registration;
     }
