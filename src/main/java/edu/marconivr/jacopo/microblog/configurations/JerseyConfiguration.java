@@ -6,6 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import edu.marconivr.jacopo.microblog.controllers.AuthController;
 import edu.marconivr.jacopo.microblog.controllers.CommentsController;
 import edu.marconivr.jacopo.microblog.controllers.PostsController;
 import edu.marconivr.jacopo.microblog.controllers.UsersController;
@@ -25,6 +26,7 @@ public class JerseyConfiguration extends ResourceConfig
         this.register(UsersController.class);
         this.register(PostsController.class);
         this.register(CommentsController.class);  
+        this.register(AuthController.class);
     }
 
     @PostConstruct

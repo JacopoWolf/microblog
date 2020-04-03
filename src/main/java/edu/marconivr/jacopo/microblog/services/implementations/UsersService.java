@@ -31,6 +31,12 @@ public class UsersService implements IUsersService
     }
 
     @Override
+    public User getByToken(String token) 
+    {
+        return usersRepo.findByToken(token);
+    }
+
+    @Override
     public void createNew(User user) 
     {
         if ( !user.username.matches("[a-zA-Z0-9_-]{3,30}" ) )
@@ -40,6 +46,13 @@ public class UsersService implements IUsersService
             throw new WebApplicationException( Response.Status.CONFLICT );
 
         usersRepo.saveAndFlush( user );
+    }
+
+
+    @Override
+    public void updateUser(User user) 
+    {
+        this.usersRepo.saveAndFlush(user);
     }
 
 }

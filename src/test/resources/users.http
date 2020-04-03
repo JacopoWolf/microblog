@@ -15,10 +15,20 @@ content-type: application/json
 {
     "username" : "qualcuno",
     "email" : "qualche@cuno.com"
-}
+} 
+
 ###
-POST  http://localhost:8080/rest/posts?from=qualcuno
+
+POST http://localhost:8080/rest/auth/login/Plut0
+Content-Type: text/plain
+
+ploto
+
+### remember to insert the Authorization token once obtained
+
+POST  http://localhost:8080/rest/posts?from=Plut0
 Content-type: application/json
+Authorization: 
 
 {
     "title" : "Un nuovo post",

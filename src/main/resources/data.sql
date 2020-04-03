@@ -1,7 +1,7 @@
-insert into user (username, email) values 
-('xxx_topolino_xxx', 'topolin0@topo.com'),
-('Plut0', 'pluto@topo.com'),
-('Tortello01', 'torte@tortellino.com');
+insert into user (username, email, password) values 
+('xxx_topolino_xxx', 'topolin0@topo.com', 'tooopo'),
+('Plut0', 'pluto@topo.com','ploto'),
+('Tortello01', 'torte@tortellino.com','gargamella');
 
 insert into post (title, content, date, author_id) values 
 ('tellus in sagittis', 'tellus semper', '2019-11-25',1),
