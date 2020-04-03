@@ -20,10 +20,22 @@ public interface IUsersService
     User getByNickname( String nickname );
 
     /**
+     * 
+     * @param token
+     * @return
+     */
+    User getByToken( String token );
+
+    /**
      * creates a new user
      * @param user
      */
     void createNew( User user );
     
+    /**
+     * 
+     * @param user
+     */
+    void updateUser( User user );
 
 }
