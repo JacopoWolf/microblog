@@ -1,4 +1,4 @@
-package edu.marconivr.jacopo.microblog;
+package edu.marconivr.jacopo.microblog.configurations;
 
 import javax.annotation.PostConstruct;
 

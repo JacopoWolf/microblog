@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.marconivr.jacopo.microblog.entities.User;
-import edu.marconivr.jacopo.microblog.entities.repos.UserRepository;
+import edu.marconivr.jacopo.microblog.entities.repositories.*;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
 
 @Service

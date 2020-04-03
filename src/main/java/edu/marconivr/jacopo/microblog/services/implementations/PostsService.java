@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 
 import edu.marconivr.jacopo.microblog.entities.Post;
 import edu.marconivr.jacopo.microblog.entities.User;
-import edu.marconivr.jacopo.microblog.entities.repos.PostsRepository;
-import edu.marconivr.jacopo.microblog.entities.repos.UserRepository;
+import edu.marconivr.jacopo.microblog.entities.repositories.*;
 import edu.marconivr.jacopo.microblog.services.*;
 
 @Service

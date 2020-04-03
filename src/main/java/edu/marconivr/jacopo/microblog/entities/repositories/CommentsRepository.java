@@ -1,4 +1,4 @@
-package edu.marconivr.jacopo.microblog.entities.repos;
+package edu.marconivr.jacopo.microblog.entities.repositories;
 
 import java.util.List;
 
