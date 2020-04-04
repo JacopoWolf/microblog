@@ -1,6 +1,10 @@
+### ignore JavaScript files since those can be generated
+*.js
+
 target/
-!**/src/main/**
-!**/src/test/**
+!**/src/resources/application.properties
+!**/src/main/**/*.java
+!**/src/test/**/*.java
 
 ### STS ###
 .apt_generated
