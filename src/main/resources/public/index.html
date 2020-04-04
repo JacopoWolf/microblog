@@ -27,31 +27,44 @@
                     <button id="btn_reset">Principale</button>
                     <button> &#x1F50D; <del>Cerca</del></button>
                     <button id="btn_reload">Aggiorna</button>
-                    <button id="btn_forw">Prossimo&triangleright;</button>
+                    <button id="btn_forward">Prossimo&triangleright;</button>
                 </p>
             </div>
             <div id="options">
                 <p>
                     <button id='btn_create'>Nuovo Post</button>
-                    Pagina <b><span id="pagecount">0</span></b>
+                    <b><span id="pageCount">0</span></b>
                 </p>
             </div>
         </header>
 
         <div class="content">
             
-            <div class="main" id="postcontainer" >
+            <div class="main" id="postContainer" >
 
                 <!-- view content goes here -->
 
             </div>
 
             <!-- used to create new posts -->
-            <div class="main" id="postcreator" style="display: none;">
+            <div class="main" id="postCreator" style="display: none;">
+
+                <button id="btn_view" style="float: right;" >Indietro</button>
+                
                 <h2>Scrivi un post</h2>
+
                 <div class="line">
                 </div>
-                <button id=btn_nocreate>Go Back (temporary)</button>
+            
+                <div id="form">
+                    <button style="float: right;" id="btn_submitPost"><h2>Invia</h2></button>
+                    nome utente<br> <input type="text" autocomplete="username" id="c_username"><br>
+                    e-mail<br><input type="text" autocomplete="email" id="c_email"><br><br>
+                    TITOLO<br> <input type="text" class="long" id="c_title"><br>
+                    
+                    CONTENUTO<br><textarea class="long" rows="20" id="c_content"  style="resize: vertical;"></textarea>
+                </div>
+
             </div>
 
 
@@ -69,30 +82,30 @@
 
             <!-- post when in lib -->
             <div class="post">
-                <div class="postheader">AUTHOR on DATE</div>
-                <div class="postcontent">
-                    <h3 class="postcontent_h">TITLE</h3>
-                    <p class="postcontent_p">CONTENT</p>
+                <div class="post_header">AUTHOR on DATE</div>
+                <div class="post_content">
+                    <h3 class="post_content_h">TITLE</h3>
+                    <p class="post_content_p">CONTENT</p>
                 </div>
             </div>
 
             <!-- post when focused -->
-            <div class="singlepost">
-                <div class="singlepostheader">
-                    <b>by <span class="singlepostheader_usrn">USERNAME</span></b>
-                    - <span class="singlepost_h">DATE</span><br>
+            <div class="singlePost">
+                <div class="singlePost_header">
+                    <b>by <span class="singlePost_header_username">USERNAME</span></b>
+                    - <span class="singlePost_header_date">DATE</span><br>
                 </div>
-                <h2 class="singlepostheader_t">TITLE</h2>
+                <h2 class="singlePost_header_title">TITLE</h2>
                 <div class="line"></div>
-                <div class="singlepostcontent">
-                    <p class="singlepostcontent_p">CONTENT</p>
+                <div class="singlePost_content">
+                    <p class="singlePost_content_p">CONTENT</p>
                 </div>
             </div>
 
             <!-- comment on focused post -->
             <div class="comment">
-                <div><span class="postheader">by AUTHOR - DATE</div>
-                <div><span class="postcontent">CONTENT</span></div>
+                <div><span class="post_header">by AUTHOR - DATE</div>
+                <div><span class="post_content">CONTENT</span></div>
             </div>
 
         </div>

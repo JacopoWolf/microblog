@@ -1,67 +1,71 @@
 class App
 {
-    _state: ApplicationState;
-    _api: ApiAccess;
-    _view: View;
+    appState: ApplicationState;
+    api: APIAccess;
+    view: View;
 
     constructor()
     {
         // component initialization
-        this._state = new ApplicationState();
-        this._api = new ApiAccess();
-        this._view = new View(this._state, this._api);
+        this.appState = new ApplicationState();
+        this.api = new APIAccess();
+        this.view = new View(this.appState, this.api);
 
         // initializing view
         //* already loads with current state
-        this._view.currentLocation = "view";
+        this.view.currentLocation = "view";
         this.updateView();
-
-
-        //      EVENT BINDING
-        
-        // previous page, can't get below 0
-        $(PAGE.backButton).click(() => { if ( --this._state.pageNumber < 0) this._state.pageNumber = 0 ; this.updateView(); });
-        // next page
-        $(PAGE.forwardButton).click(() => { ++this._state.pageNumber; this.updateView(); });   
-        // return to first page
-        $(PAGE.resetButton).click(() => { this._state.pageNumber = 0; this.updateView(); });   
-        // refresh
-        $(PAGE.reloadButton).click(() => { this.updateView(); });                            
-
-        // post creation mode
-        $(PAGE.createPostViewButton).click(() => { this._view.currentLocation = "create"; });      
-        // get back to viewing posts
-        $(PAGE.normalViewButton).click(() => { this._view.currentLocation = "view"; this.updateView() });      
-
-        // submits a new user and post
-        $(PAGE.createPostViewButton).click(async () => { this.submitUserAndPost(); });         
-
+        this.eventBinding();
     }
 
 
     updateView()
     {
+        // synchronously waits for the page to upload
         $.when(
 
-            this._api
-                .getPage(this._state)
-                .then(posts => { this._view.displayMany(posts); })
+            this.api
+                .getPage(this.appState)
+                .then(posts => { this.view.displayMany(posts); })
 
         );
     }
 
+    /**
+     * binds events and callbacks
+     */
+    eventBinding()
+    {
+        // previous page, can't get below 0
+        $(PAGE.BUTTONS.backButton).click(() => { if ( --this.appState.pageNumber < 0) this.appState.pageNumber = 0 ; this.updateView(); });
+        // next page
+        $(PAGE.BUTTONS.forwardButton).click(() => { ++this.appState.pageNumber; this.updateView(); });   
+        // return to first page
+        $(PAGE.BUTTONS.resetButton).click(() => { this.appState.pageNumber = 0; this.updateView(); this.view.currentLocation = "view" });   
+        // refresh
+        $(PAGE.BUTTONS.reloadButton).click(() => { this.updateView(); });                            
 
+        // post creation mode
+        $(PAGE.BUTTONS.createPostViewButton).click(() => { this.view.currentLocation = "create"; });      
+        // get back to viewing posts
+        $(PAGE.BUTTONS.normalViewButton).click(() => { this.view.currentLocation = "view"; this.updateView() });      
+
+        // submits a new user and post
+        $(PAGE.BUTTONS.createPostViewButton).click(async () => { this.submitUserAndPost(); });     
+    }
+
+    //todo move to View
     async submitUserAndPost()
     {
         let user: User =
         {
-            username: <string>$('#c_username').val(),
-            email: <string>$('#c_email').val()
+            username: <string>$(PAGE.CREATION.username).val(),
+            email: <string>$(PAGE.CREATION.email).val()
         };
 
         try
         {
-            await this._api.submitUser(user);
+            await this.api.submitUser(user);
             alert('creato un novo utente!');
         }
         catch
@@ -73,8 +77,8 @@ class App
 
         let post: Post =
         {
-            title: <string>$('#c_title').val(),
-            content: <string>$('#c_content').val(),
+            title: <string>$(PAGE.CREATION.title).val(),
+            content: <string>$(PAGE.CREATION.content).val(),
             author: user,
 
             // assigned by the Server
@@ -82,7 +86,7 @@ class App
             id: undefined
         };
 
-        await this._api.submitPost(post);
+        await this.api.submitPost(post);
         alert('creato un nuovo post!');
     }    
 

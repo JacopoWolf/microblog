@@ -137,3 +137,8 @@ div.comment
     background-color: black;
     margin: auto;
 }
+
+div#postCreator, .long{
+    width: 80%;
+    padding-left: 30px;
+}

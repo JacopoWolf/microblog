@@ -35,135 +35,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-/**
- * manages access to the REST api at /rest/
- * completely asynchronous
- */
-var ApiAccess = /** @class */ (function () {
-    function ApiAccess() {
-    }
-    // GET methods
-    ApiAccess.prototype.getPage = function (state) {
-        return __awaiter(this, void 0, void 0, function () {
-            var query;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        query = '/rest/posts' +
-                            '?count=' + state.pageSize +
-                            '&page=' + state.pageNumber +
-                            '&limitcontent=' + state.contentMaxLengthInView;
-                        return [4 /*yield*/, $.get(query)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    ApiAccess.prototype.getPost = function (postId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var query;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        query = '/rest/posts/' + postId;
-                        return [4 /*yield*/, $.get(query)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    ApiAccess.prototype.getPostComments = function (postId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var query;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        query = '/rest/posts/' + postId + '/comments';
-                        return [4 /*yield*/, $.get(query)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    // POST methods
-    //? those might use a callback for success or failure
-    ApiAccess.prototype.submitUser = function (newUser) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, $.ajax({
-                            url: "/rest/users",
-                            type: "POST",
-                            data: JSON.stringify({ username: newUser.username, email: newUser.email }),
-                            contentType: "application/json",
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    ApiAccess.prototype.submitPost = function (newPost) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, $.ajax({
-                            url: "/rest/posts?from=" + ((_a = newPost.author) === null || _a === void 0 ? void 0 : _a.username),
-                            type: "POST",
-                            data: JSON.stringify({ title: newPost.title, content: newPost.content }),
-                            contentType: "application/json",
-                        })];
-                    case 1: return [2 /*return*/, _b.sent()];
-                }
-            });
-        });
-    };
-    ApiAccess.prototype.submitComment = function (from, underPostId, content) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
-    };
-    return ApiAccess;
-}());
 var App = /** @class */ (function () {
     function App() {
-        var _this = this;
         // component initialization
-        this._state = new ApplicationState();
-        this._api = new ApiAccess();
-        this._view = new View(this._state, this._api);
+        this.appState = new ApplicationState();
+        this.api = new APIAccess();
+        this.view = new View(this.appState, this.api);
         // initializing view
         //* already loads with current state
-        this._view.currentLocation = "view";
+        this.view.currentLocation = "view";
         this.updateView();
-        //      EVENT BINDING
-        // previous page, can't get below 0
-        $(PAGE.backButton).click(function () { if (--_this._state.pageNumber < 0)
-            _this._state.pageNumber = 0; _this.updateView(); });
-        // next page
-        $(PAGE.forwardButton).click(function () { ++_this._state.pageNumber; _this.updateView(); });
-        // return to first page
-        $(PAGE.resetButton).click(function () { _this._state.pageNumber = 0; _this.updateView(); });
-        // refresh
-        $(PAGE.reloadButton).click(function () { _this.updateView(); });
-        // post creation mode
-        $(PAGE.createPostViewButton).click(function () { _this._view.currentLocation = "create"; });
-        // get back to viewing posts
-        $(PAGE.normalViewButton).click(function () { _this._view.currentLocation = "view"; _this.updateView(); });
-        // submits a new user and post
-        $(PAGE.createPostViewButton).click(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
-            this.submitUserAndPost();
-            return [2 /*return*/];
-        }); }); });
+        this.eventBinding();
     }
     App.prototype.updateView = function () {
         var _this = this;
-        $.when(this._api
-            .getPage(this._state)
-            .then(function (posts) { _this._view.displayMany(posts); }));
+        // synchronously waits for the page to upload
+        $.when(this.api
+            .getPage(this.appState)
+            .then(function (posts) { _this.view.displayMany(posts); }));
     };
+    /**
+     * binds events and callbacks
+     */
+    App.prototype.eventBinding = function () {
+        var _this = this;
+        // previous page, can't get below 0
+        $(PAGE.BUTTONS.backButton).click(function () { if (--_this.appState.pageNumber < 0)
+            _this.appState.pageNumber = 0; _this.updateView(); });
+        // next page
+        $(PAGE.BUTTONS.forwardButton).click(function () { ++_this.appState.pageNumber; _this.updateView(); });
+        // return to first page
+        $(PAGE.BUTTONS.resetButton).click(function () { _this.appState.pageNumber = 0; _this.updateView(); _this.view.currentLocation = "view"; });
+        // refresh
+        $(PAGE.BUTTONS.reloadButton).click(function () { _this.updateView(); });
+        // post creation mode
+        $(PAGE.BUTTONS.createPostViewButton).click(function () { _this.view.currentLocation = "create"; });
+        // get back to viewing posts
+        $(PAGE.BUTTONS.normalViewButton).click(function () { _this.view.currentLocation = "view"; _this.updateView(); });
+        // submits a new user and post
+        $(PAGE.BUTTONS.createPostViewButton).click(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+            this.submitUserAndPost();
+            return [2 /*return*/];
+        }); }); });
+    };
+    //todo move to View
     App.prototype.submitUserAndPost = function () {
         return __awaiter(this, void 0, void 0, function () {
             var user, _a, post;
@@ -171,13 +86,13 @@ var App = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         user = {
-                            username: $('#c_username').val(),
-                            email: $('#c_email').val()
+                            username: $(PAGE.CREATION.username).val(),
+                            email: $(PAGE.CREATION.email).val()
                         };
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this._api.submitUser(user)];
+                        return [4 /*yield*/, this.api.submitUser(user)];
                     case 2:
                         _b.sent();
                         alert('creato un novo utente!');
@@ -188,14 +103,14 @@ var App = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 4:
                         post = {
-                            title: $('#c_title').val(),
-                            content: $('#c_content').val(),
+                            title: $(PAGE.CREATION.title).val(),
+                            content: $(PAGE.CREATION.content).val(),
                             author: user,
                             // assigned by the Server
                             date: undefined,
                             id: undefined
                         };
-                        return [4 /*yield*/, this._api.submitPost(post)];
+                        return [4 /*yield*/, this.api.submitPost(post)];
                     case 5:
                         _b.sent();
                         alert('creato un nuovo post!');
@@ -219,6 +134,106 @@ var ApplicationState = /** @class */ (function () {
     }
     return ApplicationState;
 }());
+var app;
+// main entry point
+$(document).ready(function () {
+    app = new App();
+});
+/**
+ * manages access to the REST api at /rest/
+ * completely asynchronous
+ */
+var APIAccess = /** @class */ (function () {
+    function APIAccess() {
+    }
+    // GET methods
+    APIAccess.prototype.getPage = function (state) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = '/rest/posts' +
+                            '?count=' + state.pageSize +
+                            '&page=' + state.pageNumber +
+                            '&limitcontent=' + state.contentMaxLengthInView;
+                        return [4 /*yield*/, $.get(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    APIAccess.prototype.getPost = function (postId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = '/rest/posts/' + postId;
+                        return [4 /*yield*/, $.get(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    APIAccess.prototype.getPostComments = function (postId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = '/rest/posts/' + postId + '/comments';
+                        return [4 /*yield*/, $.get(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    // POST methods
+    //? those might use a callback for success or failure
+    APIAccess.prototype.submitUser = function (newUser) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, $.ajax({
+                            url: "/rest/users",
+                            type: "POST",
+                            data: JSON.stringify({ username: newUser.username, email: newUser.email }),
+                            contentType: "application/json",
+                        })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    APIAccess.prototype.submitPost = function (newPost) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, $.ajax({
+                            url: "/rest/posts?from=" + ((_a = newPost.author) === null || _a === void 0 ? void 0 : _a.username),
+                            type: "POST",
+                            data: JSON.stringify({ title: newPost.title, content: newPost.content }),
+                            contentType: "application/json",
+                        })];
+                    case 1: return [2 /*return*/, _b.sent()];
+                }
+            });
+        });
+    };
+    APIAccess.prototype.submitComment = function (from, underPostId, content) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    return APIAccess;
+}());
+/**
+ * controls the View state of the application
+ */
 var View = /** @class */ (function () {
     function View(state, access) {
         this._state = state;
@@ -231,13 +246,14 @@ var View = /** @class */ (function () {
         },
         set: function (value) {
             switch (value) {
+                case 'single':
                 case 'view':
-                    $('#postcontainer').css('display', 'block');
-                    $('#postcreator').css('display', 'none');
+                    $(PAGE.VIEW.postContainer).css('display', 'block');
+                    $(PAGE.VIEW.postCreator).css('display', 'none');
                     break;
                 case 'create':
-                    $('#postcontainer').css('display', 'none');
-                    $('#postcreator').css('display', 'block');
+                    $(PAGE.VIEW.postContainer).css('display', 'none');
+                    $(PAGE.VIEW.postCreator).css('display', 'block');
                     break;
             }
             this._state.currentLocation = value;
@@ -250,17 +266,17 @@ var View = /** @class */ (function () {
         var _this = this;
         this.clear();
         // updates page number in the navbar
-        $('#pagecount').html(this._state.pageNumber.toString());
+        $(PAGE.VIEW.pageNumber).html(this._state.pageNumber.toString());
         // displays every post
         $.each(posts, function (i, post) {
             var _a;
             // clones the template
-            var pt = $('#templates').find('.post').clone();
+            var pt = $(PAGE.VIEW.templates).find(PAGE.POST.multiple).clone();
             // header
-            pt.find('.postheader').html('<br>' + ((_a = post.author) === null || _a === void 0 ? void 0 : _a.username) + '</b> on ' + post.date);
+            pt.find(PAGE.POST.multi_header).html('<br>' + ((_a = post.author) === null || _a === void 0 ? void 0 : _a.username) + '</b> on ' + post.date);
             // title
-            pt.find('.postcontent_h').html(post.title);
-            pt.find('.postcontent_h').click(
+            pt.find(PAGE.POST.multi_title).html(post.title);
+            pt.find(PAGE.POST.multi_title).click(
             //* used to load a single post
             function () { return __awaiter(_this, void 0, void 0, function () {
                 var _a, _b;
@@ -281,60 +297,115 @@ var View = /** @class */ (function () {
             }); });
             // content
             var contentEnd = (post.content.length < _this._state.contentMaxLengthInView) ? '' : '...';
-            pt.find('.postcontent_p').html(post.content + contentEnd);
-            $('#postcontainer').append(pt);
+            pt.find(PAGE.POST.multi_content).html(post.content + contentEnd);
+            $(PAGE.VIEW.postContainer).append(pt);
         });
     };
     View.prototype.displaySingle = function (post) {
         var _a, _b;
         this.clear();
         //updates page count
-        $('#pagecount').html('<i><b>(' + this._state.pageNumber + ')</b></i>');
+        $(PAGE.VIEW.pageNumber).html('#' + post.id);
         // clones the template
-        var pt = $('#templates').find('.singlepost').clone();
+        var pt = $(PAGE.VIEW.templates).find(PAGE.POST.single).clone();
         // header
-        pt.find('.singlepost_h').html((_a = post.date) === null || _a === void 0 ? void 0 : _a.toString());
-        pt.find('.singlepostheader_usrn').html((_b = post.author) === null || _b === void 0 ? void 0 : _b.username);
+        pt.find(PAGE.POST.single_date).html((_a = post.date) === null || _a === void 0 ? void 0 : _a.toString());
+        pt.find(PAGE.POST.single_username).html((_b = post.author) === null || _b === void 0 ? void 0 : _b.username);
         // title
-        pt.find('.singlepostheader_t').html(post.title);
+        pt.find(PAGE.POST.single_title).html(post.title);
         // content
-        pt.find('.singlepostcontent_p').html(post.content);
-        $('#postcontainer').append(pt);
+        pt.find(PAGE.POST.single_content).html(post.content);
+        $(PAGE.VIEW.postContainer).append(pt);
         this._state.lastPostId = post.id;
     };
     View.prototype.displayComments = function (comments) {
         $.each(comments, function (i, comment) {
             var _a;
-            var cmt = $('#templates').find('.comment').clone();
-            cmt.find('.postheader').html('<b>' + ((_a = comment.author) === null || _a === void 0 ? void 0 : _a.username) + '</b> on ' + comment.date);
-            cmt.find('.postcontent').html(comment.content);
-            $('#postcontainer').append(cmt);
+            var cmt = $(PAGE.VIEW.templates).find(PAGE.COMMENT.class).clone();
+            cmt.find(PAGE.COMMENT.header).html('<b>' + ((_a = comment.author) === null || _a === void 0 ? void 0 : _a.username) + '</b> on ' + comment.date);
+            cmt.find(PAGE.COMMENT.content).html(comment.content);
+            $(PAGE.VIEW.postContainer).append(cmt);
         });
     };
     // utilities
     View.prototype.clear = function () {
-        $('#postcontainer').html('');
+        $(PAGE.VIEW.postContainer).html('');
     };
     return View;
 }());
-/**
- * static collection of aliases to access elements in the html view
- * @static
- */
-var PAGE = /** @class */ (function () {
-    function PAGE() {
-    }
-    PAGE.backButton = '#btn_back';
-    PAGE.forwardButton = '#btn_forw';
-    PAGE.reloadButton = '#btn_reload';
-    PAGE.resetButton = '#btn_reset';
-    PAGE.createPostViewButton = '#btn_create';
-    PAGE.normalViewButton = '#btn_nocreate';
-    PAGE.submitPostButton = '#btn_createpost';
-    return PAGE;
-}());
-var app;
-// main entry point
-$(document).ready(function () {
-    app = new App();
-});
+var PAGE;
+(function (PAGE) {
+    /**
+     * @static
+     */
+    var BUTTONS = /** @class */ (function () {
+        function BUTTONS() {
+        }
+        BUTTONS.backButton = '#btn_back';
+        BUTTONS.forwardButton = '#btn_forward';
+        BUTTONS.reloadButton = '#btn_reload';
+        BUTTONS.resetButton = '#btn_reset';
+        BUTTONS.createPostViewButton = '#btn_create';
+        BUTTONS.normalViewButton = '#btn_view';
+        BUTTONS.submitPostButton = '#btn_submitPost';
+        return BUTTONS;
+    }());
+    PAGE.BUTTONS = BUTTONS;
+    /**
+     * @static
+     */
+    var VIEW = /** @class */ (function () {
+        function VIEW() {
+        }
+        // different views
+        VIEW.postContainer = '#postContainer';
+        VIEW.postCreator = '#postCreator';
+        VIEW.templates = '#templates';
+        VIEW.pageNumber = '#pageCount';
+        return VIEW;
+    }());
+    PAGE.VIEW = VIEW;
+    /**
+     * @static
+     */
+    var POST = /** @class */ (function () {
+        function POST() {
+        }
+        POST.multiple = '.post';
+        POST.single = '.singlePost';
+        POST.multi_header = '.post_header';
+        POST.multi_title = '.post_content_h';
+        POST.multi_content = '.post_content_p';
+        POST.single_date = '.singlePost_header_date';
+        POST.single_username = '.singlePost_header_username';
+        POST.single_title = '.singlePost_header_title';
+        POST.single_content = '.singlePost_content_p';
+        return POST;
+    }());
+    PAGE.POST = POST;
+    /**
+     * @static
+     */
+    var COMMENT = /** @class */ (function () {
+        function COMMENT() {
+        }
+        COMMENT.class = '.comment';
+        COMMENT.header = PAGE.POST.multi_header;
+        COMMENT.content = '.post_content';
+        return COMMENT;
+    }());
+    PAGE.COMMENT = COMMENT;
+    /**
+     * @static
+     */
+    var CREATION = /** @class */ (function () {
+        function CREATION() {
+        }
+        CREATION.username = '#c_username';
+        CREATION.email = '#c_email';
+        CREATION.title = '#c_title';
+        CREATION.content = '#c_content';
+        return CREATION;
+    }());
+    PAGE.CREATION = CREATION;
+})(PAGE || (PAGE = {}));

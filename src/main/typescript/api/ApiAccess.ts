@@ -2,7 +2,7 @@
  * manages access to the REST api at /rest/
  * completely asynchronous 
  */
-class ApiAccess
+class APIAccess
 {
     // GET methods
     async getPage(state: ApplicationState): Promise<Post[]>

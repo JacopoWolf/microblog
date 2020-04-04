@@ -1,7 +1,7 @@
 /**
  * defines the different views the application can have
  */
-type ViewLocation = 'create' | 'view';
+type ViewLocation = 'create' | 'view' | 'single';
 
 /**
  * represents the application state
