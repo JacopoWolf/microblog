@@ -3,6 +3,7 @@ body{
     background-color: #E5E5F3;
     padding: 0;
     margin: 0;
+    min-width: 1000px;
 }
 
 .content{
@@ -100,14 +101,14 @@ div.post{
     word-wrap: break-word;
 }
 
-div.singlepost{
+div.singlePost{
     margin: 10px;
     word-wrap: break-word;
     background-color: white;
     padding: 20px;
 }
 
-div.singlepostheader, div.postheader{
+div.singlePost_header, div.post_header{
     color: whitesmoke;
     background-color: #6D7985;
     padding: 10px;
@@ -118,7 +119,7 @@ div.comment div{
     padding: 5px;
 }
 
-div.postcontent  h3 {
+div.post_content  h3 {
     font-weight: bold;
     cursor: alias;
 }
@@ -138,7 +139,10 @@ div.comment
     margin: auto;
 }
 
-div#postCreator, .long{
-    width: 80%;
+div#postCreator{
     padding-left: 30px;
+}
+
+.long{
+    width: 80%;
 }
