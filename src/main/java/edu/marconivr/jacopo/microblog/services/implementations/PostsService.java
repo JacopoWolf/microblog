@@ -22,10 +22,10 @@ public class PostsService implements IPostsService
 {
     
     @Autowired
-    private UserRepository usersRepo;
+    private IUserRepository usersRepo;
 
     @Autowired
-    private PostsRepository postsRepo;
+    private IPostsRepository postsRepo;
 
     @Override
     public List<Post> getPage(String username, int page, int count, int limit) 

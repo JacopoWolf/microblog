@@ -22,8 +22,8 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import edu.marconivr.jacopo.microblog.security.NoRedirectStrategy;
-import edu.marconivr.jacopo.microblog.security.TokenAuthFilter;
-import edu.marconivr.jacopo.microblog.security.TokenAuthProvider;
+import edu.marconivr.jacopo.microblog.security.TokenFilter;
+import edu.marconivr.jacopo.microblog.security.TokenAuthenticationProvider;
 
 
 @Configuration
@@ -47,7 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 
     @Autowired
-    private TokenAuthProvider authProvider;
+    private TokenAuthenticationProvider authProvider;
 
 
     @Override
@@ -92,9 +92,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
     //* filter authentication 
     @Bean
-    TokenAuthFilter restAuthFilter() throws Exception
+    TokenFilter restAuthFilter() throws Exception
     {
-        TokenAuthFilter filter = new TokenAuthFilter(PROTECTED_URLS);
+        TokenFilter filter = new TokenFilter(PROTECTED_URLS);
             filter.setAuthenticationManager( this.authenticationManager() );
             filter.setAuthenticationSuccessHandler( this.successHandler() );
         return filter;
@@ -122,7 +122,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
     //*
     @Bean
-    FilterRegistrationBean<?> disableAutoRegistration( TokenAuthFilter filter )
+    FilterRegistrationBean<?> disableAutoRegistration( TokenFilter filter )
     {
         FilterRegistrationBean<?> registration = new FilterRegistrationBean<>(filter);
             registration.setEnabled(false);

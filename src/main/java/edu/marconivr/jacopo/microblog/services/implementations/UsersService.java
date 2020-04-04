@@ -16,7 +16,7 @@ import edu.marconivr.jacopo.microblog.services.IUsersService;
 public class UsersService implements IUsersService 
 {
     @Autowired
-    private UserRepository usersRepo;
+    private IUserRepository usersRepo;
 
     @Override
     public List<User> getAll() 

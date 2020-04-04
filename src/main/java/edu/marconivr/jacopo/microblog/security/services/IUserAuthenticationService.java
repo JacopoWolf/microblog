@@ -5,7 +5,7 @@ import org.springframework.security.core.AuthenticationException;
 
 import edu.marconivr.jacopo.microblog.entities.User;
 
-public interface IUserAuthService
+public interface IUserAuthenticationService
 {
     /**
      * generates an authentication token 

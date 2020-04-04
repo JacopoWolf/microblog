@@ -16,10 +16,10 @@ public class CommentsService implements ICommentsService
 {
 
     @Autowired
-    private CommentsRepository commentsRepo;
+    private ICommentsRepository commentsRepo;
 
     @Autowired
-    private PostsRepository postsRepo;
+    private IPostsRepository postsRepo;
 
 
     @Override

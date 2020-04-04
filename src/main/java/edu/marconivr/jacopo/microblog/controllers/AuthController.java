@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
-import edu.marconivr.jacopo.microblog.security.services.IUserAuthService;
+import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
 
 //todo document
 
@@ -20,7 +20,7 @@ import edu.marconivr.jacopo.microblog.security.services.IUserAuthService;
 public class AuthController
 {
     @Autowired
-    private IUserAuthService authService;
+    private IUserAuthenticationService authService;
 
 
     @POST @Path("/login/{name}")

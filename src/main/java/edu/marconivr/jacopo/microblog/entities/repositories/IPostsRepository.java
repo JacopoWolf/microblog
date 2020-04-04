@@ -10,7 +10,7 @@ import edu.marconivr.jacopo.microblog.entities.Post;
 import edu.marconivr.jacopo.microblog.entities.User;
 
 @Repository
-public interface PostsRepository extends JpaRepository<Post,Long>
+public interface IPostsRepository extends JpaRepository<Post,Long>
 {
 
     List<Post> findByAuthor( User author, Pageable pageable) ;

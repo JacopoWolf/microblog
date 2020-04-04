@@ -11,15 +11,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import edu.marconivr.jacopo.microblog.security.services.IUserAuthService;
+import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
 
 import static edu.marconivr.jacopo.microblog.entities.User.getPasswordOf;
 
 @Component
-public class TokenAuthProvider extends AbstractUserDetailsAuthenticationProvider
+public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider
 {
     @Autowired
-    private IUserAuthService userAuthService;
+    private IUserAuthenticationService userAuthService;
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException 
@@ -35,11 +35,12 @@ public class TokenAuthProvider extends AbstractUserDetailsAuthenticationProvider
                     Optional
                     .of(userAuthService.authenticateByToken(String.valueOf(t)))
                     .map
-                    ( 
-                        user -> 
+                    (   
+                        // generates a User Authentication from microblog' s User
+                        usr -> 
                             User.builder()
-                            .username(user.username)
-                            .password( getPasswordOf(user) )
+                            .username(usr.username)
+                            .password( getPasswordOf(usr) )
                             .roles("user")
                             .build()
                     )

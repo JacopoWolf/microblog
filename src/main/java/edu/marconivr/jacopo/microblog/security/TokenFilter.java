@@ -15,7 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-public class TokenAuthFilter extends AbstractAuthenticationProcessingFilter
+public class TokenFilter extends AbstractAuthenticationProcessingFilter
 {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer";
@@ -50,7 +50,7 @@ public class TokenAuthFilter extends AbstractAuthenticationProcessingFilter
 
 
     // default constructor
-    public TokenAuthFilter(RequestMatcher defaultFilterProcessesUrl) 
+    public TokenFilter(RequestMatcher defaultFilterProcessesUrl) 
     {
         super(defaultFilterProcessesUrl);
     }
