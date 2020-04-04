@@ -3,8 +3,6 @@
 
 target/
 !**/src/resources/application.properties
-!**/src/main/**/*.java
-!**/src/test/**/*.java
 
 ### STS ###
 .apt_generated
