@@ -4,9 +4,9 @@
 class View
 {
     _state: ApplicationState;
-    _api: APIAccess;
+    _api: IApiAccess;
 
-    constructor(state: ApplicationState, access: APIAccess)
+    constructor(state: ApplicationState, access: IApiAccess)
     {
         this._state = state;
         this._api = access;
@@ -14,7 +14,7 @@ class View
 
 
 
-    //* changes between post view and post editor
+    // changes between post view and post editor
     get currentLocation(): ViewLocation
     {
         return this._state.currentLocation;
@@ -35,6 +35,20 @@ class View
                 break;
         }
         this._state.currentLocation = value;
+    }
+
+    setLoginWindowDisplay( display : boolean )
+    {
+        if (display)
+        {
+            $(PAGE.LOGIN.window).css('display', 'block');
+        }
+        else
+        {
+            $(PAGE.LOGIN.window).css('display', 'none');
+        }
+
+        this._state.isLoginWindowsDisplayed = display;
     }
 
     //  DISPLAY FUNCTIONS

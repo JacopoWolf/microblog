@@ -32,6 +32,7 @@
             </div>
             <div id="options">
                 <p>
+                    <i><span id="user_info" style="cursor: pointer;">Not logged in</span></i> - 
                     <button id='btn_create'>Nuovo Post</button>
                     <b><span id="pageCount">0</span></b>
                 </p>
@@ -58,10 +59,7 @@
             
                 <div id="form">
                     <button style="float: right;" id="btn_submitPost"><h2>Invia</h2></button>
-                    nome utente<br> <input type="text" autocomplete="username" id="c_username"><br>
-                    e-mail<br><input type="text" autocomplete="email" id="c_email"><br><br>
                     TITOLO<br> <input type="text" class="long" id="c_title"><br>
-                    
                     CONTENUTO<br><textarea class="long" rows="20" id="c_content"  style="resize: vertical;"></textarea>
                 </div>
 
@@ -76,6 +74,14 @@
 
         </div>
 
+        <!-- used to request username and password -->
+        <div id=login_window style="display: none;">
+            <b>Username:</b> <input type="text" id="login_username"><br>
+            <b>Password:</b> <input type="password" id="login_password"><br>
+            <br>
+            <button id="login_window_close">Close</button>
+            <button id="login_submit">Login</button>
+        </div>
 
         <!-- TEMPLATES for js generation go here -->
         <div id="templates" style="display: none;">

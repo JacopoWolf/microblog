@@ -121,7 +121,7 @@ div.comment div{
 
 div.post_content  h3 {
     font-weight: bold;
-    cursor: alias;
+    cursor: pointer;
 }
 
 div.comment
@@ -145,4 +145,17 @@ div#postCreator{
 
 .long{
     width: 80%;
+}
+
+#login_window{
+    position: fixed;
+    top: 30%;
+    transform: translateY(-50%);
+    left: 50%;
+    transform: translateX(-50%);
+
+    background-color: #495867;
+    color: white;
+    padding: 20px;
+    text-align: center;
 }

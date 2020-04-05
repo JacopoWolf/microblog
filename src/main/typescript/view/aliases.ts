@@ -14,6 +14,19 @@ namespace PAGE
 
         static normalViewButton = '#btn_view'
         static submitPostButton = '#btn_submitPost'
+
+        static loginStatusButton = '#user_info'
+    }
+
+    export class LOGIN
+    {
+        static window = '#login_window'
+
+        static username = '#login_username'
+        static password = '#login_password'
+
+        static closeWindowButton = '#login_window_close'
+        static submitButton = '#login_submit'
     }
 
     /**
@@ -64,9 +77,6 @@ namespace PAGE
      */
     export class CREATION
     {
-        static username = '#c_username'
-        static email = '#c_email'
-
         static title = '#c_title'
         static content = '#c_content'
     }

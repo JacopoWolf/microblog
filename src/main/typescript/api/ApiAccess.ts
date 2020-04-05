@@ -2,8 +2,16 @@
  * manages access to the REST api at /rest/
  * completely asynchronous 
  */
-class APIAccess
+class ApiAccess implements IApiAccess
 {
+    auth : Authentication
+
+    public constructor( auth : Authentication )
+    {
+        this.auth = auth;
+    }
+
+
     // GET methods
     async getPage(state: ApplicationState): Promise<Post[]>
     {
@@ -41,6 +49,7 @@ class APIAccess
                 type: "POST",
                 data: JSON.stringify({ username: newUser.username, email: newUser.email }),
                 contentType: "application/json",
+                beforeSend: xhr => { this.addAuth(xhr); }
             });
     }
 
@@ -52,6 +61,7 @@ class APIAccess
                 type: "POST",
                 data: JSON.stringify({ title: newPost.title, content: newPost.content }),
                 contentType: "application/json",
+                beforeSend: xhr => {this.addAuth(xhr);}
             });
     }
 
@@ -59,5 +69,15 @@ class APIAccess
     {
         //todo implement ajax call
     }
+
+
+    private addAuth( xhr : JQuery.jqXHR<any> )
+    {
+        if (this.auth.isLoggedIn)
+        {
+            xhr.setRequestHeader( 'Authentication', <string>this.auth.token );
+        }
+    }
+
 
 }

@@ -13,6 +13,7 @@ class ApplicationState
     contentMaxLengthInView = 40;
 
     currentLocation : ViewLocation = 'create';
+    isLoginWindowsDisplayed = false;
 
     lastPostId  = -1;
 }
