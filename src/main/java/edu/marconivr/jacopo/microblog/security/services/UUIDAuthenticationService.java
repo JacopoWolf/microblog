@@ -25,7 +25,14 @@ public class UUIDAuthenticationService implements IUserAuthenticationService
         if ( !User.getPasswordOf(user).contentEquals(password) ) 
             throw new BadCredentialsException("Wrong password");
 
-        String token = UUID.randomUUID().toString();
+        String token; 
+        
+        do 
+        {
+            token = UUID.randomUUID().toString();
+        }
+        while( this.userService.getByToken(token) != null );
+        
         
         User.setTokenOf( user,token );
 
@@ -50,6 +57,16 @@ public class UUIDAuthenticationService implements IUserAuthenticationService
     {
         User user = this.userService.getByNickname(username);
 
+        User.setTokenOf(user, null);
+
+        this.userService.updateUser(user);
+    }
+
+    @Override
+    public void invalidateToken(String token)
+    {
+        User user = this.userService.getByToken(token);
+        
         User.setTokenOf(user, null);
 
         this.userService.updateUser(user);

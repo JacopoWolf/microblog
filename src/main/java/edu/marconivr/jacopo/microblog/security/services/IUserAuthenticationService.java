@@ -30,4 +30,9 @@ public interface IUserAuthenticationService
      */
     void logout( String username );
     
+    /**
+     * invalidates a token, effectively logging a user out
+     * @param token
+     */
+    void invalidateToken(String token);
 }
