@@ -35,7 +35,9 @@ public class User
 
 
     // security properties
+    @Basic
     private String password;
+    @Column(name = "token", nullable = true, unique = true)
     private String token;
 
 

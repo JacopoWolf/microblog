@@ -1,14 +1,20 @@
 package edu.marconivr.jacopo.microblog.controllers;
 
-import java.util.List;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.User;
+import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,26 +27,27 @@ public class UsersController
     @Autowired
     private IUsersService usersService;
 
-
-    @GET @Path("/all")
-    @Produces("application/json")
-    @ApiOperation(value = "returns all registered users")
-    public List<User> getAllUsers() 
-    {
-        return this.usersService.getAll();
-    }
+    @Autowired
+    private IUserAuthenticationService userAuthService;
 
     @GET
+    @Consumes("text/plain")
     @Produces("application/json")
-    @ApiOperation( value = "gets an user by its id" )
-    public User getByUsername( @ApiParam @QueryParam("name") String username )
+    @ApiOperation( value = "gets the user's info after an authentication" )
+    public User getInfoWithToken( @HeaderParam("Authorization") String token )
     {
-        if (  username == null || username.isEmpty() )
-           throw new WebApplicationException( Response.Status.BAD_REQUEST );
-
-        return this.usersService.getByNickname(username);
+        try
+        {
+            return this.userAuthService.authenticateByToken(token);
+        }
+        catch ( AuthenticationException authE )
+        {
+            throw new WebApplicationException( Response.Status.UNAUTHORIZED );
+        }
     }
 
+
+    //todo rework this crap
     @POST
     @Consumes("application/json")
     @ApiOperation("generates a new user")

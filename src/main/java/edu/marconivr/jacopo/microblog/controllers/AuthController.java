@@ -35,10 +35,10 @@ public class AuthController
         String value 
     )
     {
-        String[] strs = value.split(";");
+        String[] values = value.split(";");
 
-        String username = strs[0];
-        String password = strs[1];
+        String username = values[0];
+        String password = values[1];
 
         try
         {

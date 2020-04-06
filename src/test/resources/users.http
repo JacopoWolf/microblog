@@ -26,7 +26,7 @@ Plut0;ploto
 
 ### remember to insert the Authorization token once obtained
 
-POST  http://localhost:8080/rest/posts?from=Plut0
+POST  http://localhost:8080/rest/posts
 Content-type: application/json
 Authorization: 
 

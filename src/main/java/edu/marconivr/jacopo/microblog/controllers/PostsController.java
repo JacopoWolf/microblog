@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.Post;
+import edu.marconivr.jacopo.microblog.entities.User;
+import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
 import edu.marconivr.jacopo.microblog.services.IPostsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +30,9 @@ public class PostsController
 {
     @Autowired
     private IPostsService postsService;
+
+    @Autowired
+    private IUserAuthenticationService authService;
 
     @GET 
     @Produces("application/json")
@@ -82,20 +88,26 @@ public class PostsController
     @ApiOperation( "Create a new post" )
     public Response createNew 
     ( 
-        @ApiParam(value = "the username if the user who created this post")
-        @QueryParam("from") 
-        String username, 
+        @HeaderParam("Authorization")
+        String token, 
 
         @ApiParam (value = "the post to submit")
         Post post 
     )
     {
-        if (post == null || username == null)
+        if (post == null )
             throw new WebApplicationException( Response.Status.BAD_REQUEST );
 
-        this.postsService.createNew( username, post );
-
-        return Response.status(Response.Status.CREATED).build();
+        try
+        {
+            User user = this.authService.authenticateByToken(token);
+            this.postsService.createNew( user.username, post );  
+            return Response.status(Response.Status.CREATED).build();
+        }
+        catch( Exception e )
+        {
+            throw new WebApplicationException( Response.Status.UNAUTHORIZED );
+        }        
     }
 
 }
