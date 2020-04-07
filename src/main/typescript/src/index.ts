@@ -1,7 +1,6 @@
-
+// main entry point for
 var app : App;
 
-// main entry point
 $(document).ready( () =>
 {
     app = new App();

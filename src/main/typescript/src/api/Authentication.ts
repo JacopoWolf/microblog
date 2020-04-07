@@ -5,12 +5,11 @@ class Authentication
 {
     private _token: (string | null) = null;
 
+
     public get token(): (string | null)
     {
         return this._token;
     }
-
-
 
     public get isLoggedIn(): boolean
     {
@@ -28,8 +27,8 @@ class Authentication
                 contentType: "text/plain",
                 cache: false,
                 data: '' + username + ';' + password,
-                success:  (data,xhr,code) => {this._token = <string>data},
-                error: (xhr: JQueryXHR, exception) => alert('ERROR ' + xhr.status )
+                success:  (data,status,xhr) => {this._token = <string>data},
+                error: (xhr, exception) => alert('ERROR ' + xhr.status )
             });
     }
 
