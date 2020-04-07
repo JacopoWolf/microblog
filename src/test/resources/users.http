@@ -8,14 +8,6 @@ GET http://localhost:8080/rest/posts?count=10&page=0&limitcontent=3
 GET http://localhost:8080/rest/posts/5/comments
 ###
 GET http://localhost:8080/rest/users?name=qualcuno
-###
-POST  http://localhost:8080/rest/users
-content-type: application/json
-
-{
-    "username" : "qualcuno",
-    "email" : "qualche@cuno.com"
-} 
 
 ###
 
@@ -34,3 +26,14 @@ Authorization:
     "title" : "Un nuovo post",
     "content" : "yadda yadda yadda yadda yadda"
 }
+
+###
+
+POST http://localhost:8080/rest/users/
+Content-Type: application/json
+Password: P@ssw0rd
+
+{
+    "username" : "i_use_bad_password",
+    "email" : "stupid@us.er"
+} 

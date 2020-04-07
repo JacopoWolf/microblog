@@ -75,5 +75,9 @@ public class User
     {
         user.token = token;
     }
+    public static void setPasswordOf(User user, String password)
+    {
+        user.password = password;
+    }
 
 }

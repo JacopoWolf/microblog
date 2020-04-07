@@ -4,9 +4,10 @@
  */
 class ApiAccess implements IApiAccess
 {
-    auth : Authentication
+    auth: Authentication;
+    cachedUser: User | null = null;
 
-    public constructor( auth : Authentication )
+    public constructor(auth: Authentication)
     {
         this.auth = auth;
     }
@@ -31,7 +32,8 @@ class ApiAccess implements IApiAccess
         return await $.get(query);
     }
 
-    async getPostComments(postId: number) : Promise<PostComment[]>
+
+    async getPostComments(postId: number): Promise<PostComment[]>
     {
         let query = '/rest/posts/' + postId + '/comments';
         return await $.get(query);
@@ -40,28 +42,15 @@ class ApiAccess implements IApiAccess
 
     // POST methods
     //? those might use a callback for success or failure
-
-    async submitUser(newUser: User): Promise<void>
+    async submitPost(newPost: Post): Promise<any>
     {
         return await $.ajax
             ({
-                url: "/rest/users",
+                url: "/rest/posts",
                 type: "POST",
-                data: JSON.stringify({ username: newUser.username, email: newUser.email }),
                 contentType: "application/json",
-                beforeSend: xhr => { this.addAuth(xhr); }
-            });
-    }
-
-    async submitPost(newPost: Post): Promise<void>
-    {
-        return await $.ajax
-            ({
-                url: "/rest/posts?from=" + newPost.author?.username,
-                type: "POST",
                 data: JSON.stringify({ title: newPost.title, content: newPost.content }),
-                contentType: "application/json",
-                beforeSend: xhr => {this.addAuth(xhr);}
+                beforeSend: xhr => { this.addAuth(xhr); }
             });
     }
 
@@ -71,13 +60,45 @@ class ApiAccess implements IApiAccess
     }
 
 
-    private addAuth( xhr : JQuery.jqXHR<any> )
+
+    async registerUser(user: User, password: string): Promise<void>
     {
-        if (this.auth.isLoggedIn)
-        {
-            xhr.setRequestHeader( 'Authentication', <string>this.auth.token );
-        }
+        return await $.ajax
+            ({
+                url: "/rest/users",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ username: user.username, email: user.email }),
+                beforeSend: xhr => { xhr.setRequestHeader("Password", password); }
+            });
+    }
+
+    async getUserInfo( ): Promise<User>
+    {
+        if (this.cachedUser != null)
+            return <User>this.cachedUser;
+
+        await $.ajax
+        ({
+            url: "/rest/users",
+            type: "GET",
+            beforeSend: xhr => { this.addAuth(xhr); },
+            success: (data,xhr,code) => { this.cachedUser = data }
+        });
+
+        if (this.cachedUser != null)
+            return this.cachedUser; 
+        throw new Error()
     }
 
 
+
+
+    private addAuth(xhr: JQuery.jqXHR<any>)
+    {
+        if (this.auth.isLoggedIn)
+        {
+            xhr.setRequestHeader('Authorization', <string>this.auth.token);
+        }
+    }
 }

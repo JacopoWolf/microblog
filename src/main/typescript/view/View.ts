@@ -131,6 +131,22 @@ class View
         });
     }
 
+
+    async updateLoginStatus( auth: Authentication )
+    {
+        if (auth.isLoggedIn)
+        {
+            let user = await this._api.getUserInfo();
+
+            $(PAGE.BUTTONS.loginStatusButton).html(user.username);
+        }
+        else
+        {
+            $(PAGE.BUTTONS.loginStatusButton).html('Not Logged in');
+        }
+
+    }
+
     // utilities
 
     clear(): void

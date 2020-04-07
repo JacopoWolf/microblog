@@ -14,7 +14,7 @@ type Post =
     {
         id: undefined | number;
         date: undefined | Date;
-        author: User;
+        author: undefined | User;
         title: string;
         content: string;
     };

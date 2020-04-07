@@ -35,7 +35,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     private static final RequestMatcher PROTECTED_URLS =
     new OrRequestMatcher
     (
-        new AntPathRequestMatcher("/rest/users/**", "POST"),
         new AntPathRequestMatcher("/rest/posts/**", "POST"),
         new AntPathRequestMatcher("/rest/comments/**", "POST")
     );

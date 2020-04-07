@@ -27,7 +27,6 @@ public class AuthController
 
     @ApiOperation( value = "logs in the specified user. Uses a plaintext format. Returns the access token." )
     @POST @Path("/login")
-    @Consumes( "text/plain" )
     @Produces("text/plain")
     public String login 
     ( 
@@ -35,10 +34,20 @@ public class AuthController
         String value 
     )
     {
-        String[] values = value.split(";");
+        String[] values;
+        String username, password;
 
-        String username = values[0];
-        String password = values[1];
+        try
+        {
+            values = value.split(";");
+            username = values[0];
+            password = values[1];
+
+        }
+        catch(IndexOutOfBoundsException ioe)
+        {
+            throw new WebApplicationException( Response.Status.BAD_REQUEST );
+        }
 
         try
         {
@@ -50,6 +59,7 @@ public class AuthController
         }
     }
 
+    
     @ApiOperation( value = "invalidates the specific token" )
     @POST @Path("/logout")
     @Consumes("text/plain")

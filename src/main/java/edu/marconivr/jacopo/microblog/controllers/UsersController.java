@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.User;
+import edu.marconivr.jacopo.microblog.security.services.IPasswordValidationService;
 import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
 import io.swagger.annotations.Api;
@@ -30,11 +31,14 @@ public class UsersController
     @Autowired
     private IUserAuthenticationService userAuthService;
 
+    @Autowired
+    private IPasswordValidationService passwordValidation;
+
     @GET
     @Consumes("text/plain")
     @Produces("application/json")
     @ApiOperation( value = "gets the user's info after an authentication" )
-    public User getInfoWithToken( @HeaderParam("Authorization") String token )
+    public User getInfoWithToken( @ApiParam @HeaderParam("Authorization") String token )
     {
         try
         {
@@ -47,17 +51,21 @@ public class UsersController
     }
 
 
-    //todo rework this crap
     @POST
-    @Consumes("application/json")
-    @ApiOperation("generates a new user")
-    public Response createUser( @ApiParam User user )
+    @Consumes( "application/json" )
+    @ApiOperation(value = "registers a new user with the given info and the selected password. Doesn't log in.")
+    public Response registerUser( @ApiParam User user, @ApiParam @HeaderParam("Password") String password )
     {
-        if (user == null)
-            throw new WebApplicationException( Response.Status.BAD_REQUEST );
+        if ( user == null || password == null)
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        
+        if ( !this.passwordValidation.validatePassword(password) )
+            throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE);
 
+        User.setPasswordOf(user, password);
         this.usersService.createNew(user);
-        return Response.status( Response.Status.CREATED ).build();
+
+        return Response.noContent().build();
     }
 
 }

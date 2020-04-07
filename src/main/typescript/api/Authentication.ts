@@ -3,16 +3,9 @@
  */
 class Authentication
 {
-    private _user : (User | null) = null;
     private _token: (string | null) = null;
 
-
-    public get user() : (User | null)
-    {
-        return this._user;
-    }    
-
-    public get token() : (string | null)
+    public get token(): (string | null)
     {
         return this._token;
     }
@@ -21,20 +14,28 @@ class Authentication
 
     public get isLoggedIn(): boolean
     {
-        return this._token != undefined;
+        return this._token != null;
     }
 
 
-    public async login(username: string, password: string) 
+    public async login(username: string, password: string): Promise<void>
     {
-        //todo implement ajax query to login and set token
-
-        //todo gather user info
+        let data = username + ';' + password;
+        await $.ajax
+            ({
+                url: "/rest/auth/login",
+                type: "POST",
+                contentType: "text/plain",
+                cache: false,
+                data: '' + username + ';' + password,
+                success:  (data,xhr,code) => {this._token = <string>data},
+                error: (xhr: JQueryXHR, exception) => alert('ERROR ' + xhr.status )
+            });
     }
 
     public async logout()
     {
-        this._user = null;
+        this._token = null;
         //todo implement
     }
 

@@ -55,35 +55,48 @@ class App
         $(PAGE.BUTTONS.submitPostButton).click(async () => { this.submitUserAndPost(); });
 
         // open login window
-        $(PAGE.BUTTONS.loginStatusButton).click(() => { this.view.setLoginWindowDisplay(true); });
+        $(PAGE.BUTTONS.loginStatusButton).click(() => { this.clickLogin() });
         // close login window
         $(PAGE.LOGIN.closeWindowButton).click(() => { this.view.setLoginWindowDisplay(false); });
         //todo submit login
-        $(PAGE.LOGIN.submitButton).click(() => { alert('non ancora implementato'); });
+        $(PAGE.LOGIN.submitButton).click(() => { this.doLogin(); });
 
+    }
+
+
+    clickLogin()
+    {
+        if (this.auth.isLoggedIn)
+        {
+            if (window.confirm('do you really want to logout?'))
+            {
+                this.auth.logout();
+                $.when(this.view.updateLoginStatus( this.auth ) );
+            }
+        }
+        else
+        {
+            this.view.setLoginWindowDisplay(true);
+        }
+    }
+
+    async doLogin()
+    {
+        let username = <string>$(PAGE.LOGIN.username).val();
+        let password = <string>$(PAGE.LOGIN.password).val();
+
+        await this.auth.login(username,password);
+        await this.view.updateLoginStatus( this.auth );
+
+        this.view.setLoginWindowDisplay(false);
+
+        $(PAGE.LOGIN.password).val('');
     }
 
 
     async submitUserAndPost()
     {
-        //! remove this zombie code
-        /*let user: User =
-        {
-            username: <string>$(PAGE.CREATION.username).val(),
-            email: <string>$(PAGE.CREATION.email).val()
-        };
-
-        try
-        {
-            await this.api.submitUser(user);
-            alert('creato un novo utente!');
-        }
-        catch
-        {
-            console.log('utente esistente');
-        }*/
-
-        if (this.auth.user == null)
+        if (!this.auth.isLoggedIn)
         {
             alert("can't post if login has not been performed")
             throw new Error("login required")
@@ -94,9 +107,9 @@ class App
         {
             title: <string>$(PAGE.CREATION.title).val(),
             content: <string>$(PAGE.CREATION.content).val(),
-            author: <User>this.auth.user,
 
             // assigned by the Server
+            author: undefined,
             date: undefined,
             id: undefined
         };
