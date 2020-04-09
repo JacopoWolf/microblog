@@ -1,6 +1,8 @@
-package edu.marconivr.jacopo.microblog.security.services;
+package edu.marconivr.jacopo.microblog.security.services.implementations;
 
 import org.springframework.stereotype.Service;
+
+import edu.marconivr.jacopo.microblog.security.services.IValidationService;
 
 @Service
 public class SimpleValidationService implements IValidationService

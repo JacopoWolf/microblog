@@ -1,4 +1,4 @@
-package edu.marconivr.jacopo.microblog.security.services;
+package edu.marconivr.jacopo.microblog.security.services.implementations;
 
 import java.util.UUID;
 
@@ -8,6 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import edu.marconivr.jacopo.microblog.entities.User;
+import edu.marconivr.jacopo.microblog.security.services.IAuthenticationService;
 import edu.marconivr.jacopo.microblog.services.implementations.UsersService;
 
 @Service
