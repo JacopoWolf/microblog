@@ -14,8 +14,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.User;
-import edu.marconivr.jacopo.microblog.security.services.IPasswordValidationService;
-import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
+import edu.marconivr.jacopo.microblog.security.services.IAuthenticationService;
+import edu.marconivr.jacopo.microblog.security.services.IValidationService;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,10 +29,10 @@ public class UsersController
     private IUsersService usersService;
 
     @Autowired
-    private IUserAuthenticationService userAuthService;
+    private IAuthenticationService userAuthService;
 
     @Autowired
-    private IPasswordValidationService passwordValidation;
+    private IValidationService passwordValidation;
 
     @GET
     @Consumes("text/plain")

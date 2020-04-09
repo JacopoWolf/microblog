@@ -9,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.marconivr.jacopo.microblog.entities.User;
-import edu.marconivr.jacopo.microblog.entities.repositories.*;
+import edu.marconivr.jacopo.microblog.entities.repositories.IUserRepository;
+import edu.marconivr.jacopo.microblog.security.services.IValidationService;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
 
 @Service
 public class UsersService implements IUsersService 
 {
+    @Autowired
+    IValidationService validationService;
+
     @Autowired
     private IUserRepository usersRepo;
 
@@ -39,7 +43,7 @@ public class UsersService implements IUsersService
     @Override
     public void createNew(User user) 
     {
-        if ( !user.username.matches("[a-zA-Z0-9_-]{3,30}" ) )
+        if ( !validationService.validateUsername(user.username) )
             throw new WebApplicationException( Response.Status.NOT_ACCEPTABLE );
 
         if ( usersRepo.findByUsername(user.username) != null )

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.Post;
 import edu.marconivr.jacopo.microblog.entities.User;
-import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
+import edu.marconivr.jacopo.microblog.security.services.IAuthenticationService;
 import edu.marconivr.jacopo.microblog.services.IPostsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +32,7 @@ public class PostsController
     private IPostsService postsService;
 
     @Autowired
-    private IUserAuthenticationService authService;
+    private IAuthenticationService authService;
 
     @GET 
     @Produces("application/json")

@@ -1,5 +1,7 @@
 package edu.marconivr.jacopo.microblog.security;
 
+import static edu.marconivr.jacopo.microblog.entities.User.getPasswordOf;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +13,13 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
-
-import static edu.marconivr.jacopo.microblog.entities.User.getPasswordOf;
+import edu.marconivr.jacopo.microblog.security.services.IAuthenticationService;
 
 @Component
 public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider
 {
     @Autowired
-    private IUserAuthenticationService userAuthService;
+    private IAuthenticationService userAuthService;
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException 
@@ -40,7 +40,7 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
                         usr -> 
                             User.builder()
                             .username(usr.username)
-                            .password( getPasswordOf(usr) )
+                            .password( getPasswordOf(usr) ) // microblog' s User 
                             .roles("user")
                             .build()
                     )

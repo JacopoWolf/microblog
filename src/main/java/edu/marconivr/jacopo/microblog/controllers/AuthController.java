@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
-import edu.marconivr.jacopo.microblog.security.services.IUserAuthenticationService;
+import edu.marconivr.jacopo.microblog.security.services.IAuthenticationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiParam;
 public class AuthController
 {
     @Autowired
-    private IUserAuthenticationService authService;
+    private IAuthenticationService authService;
 
 
     @ApiOperation( value = "logs in the specified user. Uses a plaintext format. Returns the access token." )

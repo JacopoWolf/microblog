@@ -11,7 +11,7 @@ import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.services.implementations.UsersService;
 
 @Service
-public class UUIDAuthenticationService implements IUserAuthenticationService 
+public class UUIDAuthenticationService implements IAuthenticationService 
 {
     @Autowired
     private UsersService userService;
