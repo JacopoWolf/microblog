@@ -9,21 +9,25 @@ import org.springframework.stereotype.Service;
 
 import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.security.services.IAuthenticationService;
-import edu.marconivr.jacopo.microblog.services.implementations.UsersService;
+import edu.marconivr.jacopo.microblog.security.services.IPasswordService;
+import edu.marconivr.jacopo.microblog.services.IUsersService;
 
 @Service
 public class UUIDAuthenticationService implements IAuthenticationService 
 {
     @Autowired
-    private UsersService userService;
+    private IUsersService userService;
     
+    @Autowired
+    private IPasswordService passwordService;
 
     @Override
     public String login(String username, String password) throws BadCredentialsException 
     {
         User user = this.userService.getByNickname(username);
 
-        if ( !User.getPasswordOf(user).contentEquals(password) ) 
+
+        if ( ! passwordService.verify(user, password) )
             throw new BadCredentialsException("Wrong password");
 
         String token; 

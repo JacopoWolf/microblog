@@ -70,7 +70,7 @@ class App
         {
             if (window.confirm('do you really want to logout?'))
             {
-                this.auth.logout();
+                $.when(this.api.logout() );
                 $.when(this.view.updateLoginStatus( this.auth ) );
             }
         }
@@ -85,7 +85,7 @@ class App
         let username = <string>$(PAGE.LOGIN.username).val();
         let password = <string>$(PAGE.LOGIN.password).val();
 
-        await this.auth.login(username,password);
+        await this.api.login(username,password);
         await this.view.updateLoginStatus( this.auth );
 
         this.view.setLoginWindowDisplay(false);

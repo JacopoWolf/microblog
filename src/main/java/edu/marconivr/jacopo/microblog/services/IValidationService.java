@@ -1,4 +1,4 @@
-package edu.marconivr.jacopo.microblog.security.services;
+package edu.marconivr.jacopo.microblog.services;
 
 public interface IValidationService 
 {

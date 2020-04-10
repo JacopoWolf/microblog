@@ -34,5 +34,5 @@ public interface IAuthenticationService
      * invalidates a token, effectively logging a user out
      * @param token
      */
-    void invalidateToken(String token);
+    void invalidateToken( String token );
 }

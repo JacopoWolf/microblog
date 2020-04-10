@@ -1,6 +1,6 @@
 package edu.marconivr.jacopo.microblog.controllers;
 
-import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -62,8 +62,7 @@ public class AuthController
     
     @ApiOperation( value = "invalidates the specific token" )
     @POST @Path("/logout")
-    @Consumes("text/plain")
-    public Response logout( String token )
+    public Response logout( @HeaderParam("Authorization") String token )
     {
         this.authService.invalidateToken(token);
 

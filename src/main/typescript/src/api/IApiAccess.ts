@@ -20,4 +20,7 @@ interface IApiAccess
     getUserInfo( ) : Promise<User>
 
 
+    login(username: string, password: string): Promise<void>
+
+    logout(): Promise<void>
 }

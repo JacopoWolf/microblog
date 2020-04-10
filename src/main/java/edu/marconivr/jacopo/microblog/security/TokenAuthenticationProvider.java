@@ -1,6 +1,6 @@
 package edu.marconivr.jacopo.microblog.security;
 
-import static edu.marconivr.jacopo.microblog.entities.User.getPasswordOf;
+import static edu.marconivr.jacopo.microblog.entities.User.getHashedPasswordOf;
 
 import java.util.Optional;
 
@@ -36,11 +36,11 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
                     .of(userAuthService.authenticateByToken(String.valueOf(t)))
                     .map
                     (   
-                        // generates a User Authentication from microblog' s User
+                        // generates UserDetails from microblog' s User
                         usr -> 
                             User.builder()
                             .username(usr.username)
-                            .password( getPasswordOf(usr) ) // microblog' s User 
+                            .password( getHashedPasswordOf(usr) ) // microblog' s User 
                             .roles("user")
                             .build()
                     )

@@ -5,7 +5,6 @@
 class ApiAccess implements IApiAccess
 {
     auth: Authentication;
-    cachedUser: User | null = null;
 
     public constructor(auth: Authentication)
     {
@@ -75,22 +74,51 @@ class ApiAccess implements IApiAccess
 
     async getUserInfo( ): Promise<User>
     {
-        if (this.cachedUser != null)
-            return <User>this.cachedUser;
+        let user : User | undefined;
 
         await $.ajax
         ({
             url: "/rest/users",
             type: "GET",
             beforeSend: xhr => { this.addAuth(xhr); },
-            success: (data,xhr,code) => { this.cachedUser = data }
+            success: (data,xhr,code) => { user = data },
+            error: (xhr,exception) => {alert('error retrieving user infos!')}
         });
 
-        if (this.cachedUser != null)
-            return this.cachedUser; 
-        throw new Error()
+        return <User>user; 
     }
 
+
+
+
+    public async login(username: string, password: string): Promise<void>
+    {
+        let data = username + ';' + password;
+        await $.ajax
+            ({
+                url: "/rest/auth/login",
+                type: "POST",
+                contentType: "text/plain",
+                cache: false,
+                data: '' + username + ';' + password,
+                success:  (data,status,xhr) => {this.auth.token = <string>data},
+                error: (xhr, exception) => alert('ERROR ' + xhr.status )
+            });
+    }
+    
+
+    public async logout()
+    {
+        await $.ajax
+            ({
+                url: "/rest/auth/logout",
+                type: "POST",
+                cache: false,
+                beforeSend: xhr => { this.addAuth(xhr); }
+            });
+
+        this.auth.token = null;
+    }
 
 
 

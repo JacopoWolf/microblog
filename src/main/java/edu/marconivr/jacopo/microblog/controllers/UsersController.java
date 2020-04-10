@@ -15,8 +15,9 @@ import org.springframework.stereotype.Component;
 
 import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.security.services.IAuthenticationService;
-import edu.marconivr.jacopo.microblog.security.services.IValidationService;
+import edu.marconivr.jacopo.microblog.security.services.IPasswordService;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
+import edu.marconivr.jacopo.microblog.services.IValidationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -32,7 +33,11 @@ public class UsersController
     private IAuthenticationService userAuthService;
 
     @Autowired
-    private IValidationService passwordValidation;
+    private IValidationService validationService;
+
+    @Autowired
+    private IPasswordService passwordService;
+    
 
     @GET
     @Consumes("text/plain")
@@ -59,11 +64,15 @@ public class UsersController
         if ( user == null || password == null)
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         
-        if ( !this.passwordValidation.validatePassword(password) )
+        if ( ! this.validationService.validatePassword(password) )
             throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE);
 
-        User.setPasswordOf(user, password);
+        // updates the user's password
+        this.passwordService.setCredentialsOf(user, password);
+
+        // persists the user in the database
         this.usersService.createNew(user);
+
 
         return Response.noContent().build();
     }

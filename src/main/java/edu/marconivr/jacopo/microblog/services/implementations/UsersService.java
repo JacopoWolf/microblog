@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.entities.repositories.IUserRepository;
-import edu.marconivr.jacopo.microblog.security.services.IValidationService;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
+import edu.marconivr.jacopo.microblog.services.IValidationService;
 
 @Service
 public class UsersService implements IUsersService 
@@ -43,7 +43,7 @@ public class UsersService implements IUsersService
     @Override
     public void createNew(User user) 
     {
-        if ( !validationService.validateUsername(user.username) )
+        if ( ! validationService.validateUsername(user.username) )
             throw new WebApplicationException( Response.Status.NOT_ACCEPTABLE );
 
         if ( usersRepo.findByUsername(user.username) != null )

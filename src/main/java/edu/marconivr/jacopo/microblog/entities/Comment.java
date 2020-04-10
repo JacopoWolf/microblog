@@ -27,4 +27,11 @@ public class Comment
     @Lob @Column
     public String content;
 
+
+    public Comment(){}
+    public Comment( Post under )
+    {
+        this.under = under;
+    }
+
 }

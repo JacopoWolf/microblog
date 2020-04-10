@@ -33,10 +33,14 @@ public class User
     @Basic
     public String email;
 
-
+    //? those should be in a separate file. But who cares, that's an example.
     // security properties
     @Basic
-    private String password;
+    private String passwordHash;
+
+    @Basic
+    private String salt;
+
     @Column(name = "token", nullable = true, unique = true)
     private String token;
 
@@ -52,6 +56,7 @@ public class User
     private Set<Comment> comments;
 
 
+
     public User () {}
     public User( String username, String email )
     {
@@ -60,11 +65,17 @@ public class User
     }
 
 
-    // non-serializing accessors
 
-    public static String getPasswordOf( User user )
+    // non-serializing accessors
+    //? that's a bit odd.
+
+    public static String getHashedPasswordOf( User user )
     {
-        return user.password;
+        return user.passwordHash;
+    }
+    public static String getSaltOf(User user)
+    {
+        return user.salt;
     }
     public static String getTokenOf( User user )
     {
@@ -75,9 +86,10 @@ public class User
     {
         user.token = token;
     }
-    public static void setPasswordOf(User user, String password)
+    public static void setPasswordOf(User user, String password, String salt)
     {
-        user.password = password;
+        user.passwordHash = password;
+        user.salt = salt;
     }
 
 }
