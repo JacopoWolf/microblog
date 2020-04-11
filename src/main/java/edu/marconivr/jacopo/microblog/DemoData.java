@@ -1,6 +1,7 @@
 package edu.marconivr.jacopo.microblog;
 
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -39,17 +40,18 @@ public class DemoData implements ApplicationRunner
         User tortello = new User("tortello69", "tortello@fake");
         this.usersController.registerUser(tortello, "gargamella");
     
+        DateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         
         Post post1 = new Post();
             post1.author = mickey;
-            post1.date = new Date(2020, 1, 1, 12, 00, 00);  // that's why i hate java.
+            post1.date = format.parse("2020.01.01 12:00:00");
             post1.title = "kaffèè";
             post1.content = "buongiornissimo!!!!1!1!1";
         postsRepo.saveAndFlush(post1);
         
         Comment comment1 = new Comment(post1);
             comment1.author = tortello;
-            comment1.date = new Date(2020, 01, 01, 12, 10, 00);
+            comment1.date = format.parse("2020.01.01 12:10:00");
             comment1.content = "Buongiollo anche a te!!1!1!";
         commentsRepo.saveAndFlush(comment1);
             
