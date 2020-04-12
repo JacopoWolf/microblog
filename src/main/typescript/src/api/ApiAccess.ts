@@ -41,21 +41,47 @@ class ApiAccess implements IApiAccess
 
     // POST methods
     //? those might use a callback for success or failure
-    async submitPost(newPost: Post): Promise<any>
+    async submitPost(newPost: Post): Promise<number>
     {
-        return await $.ajax
+        let newPostId = 0 
+        
+        await $.ajax
             ({
                 url: "/rest/posts",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({ title: newPost.title, content: newPost.content }),
-                beforeSend: xhr => { this.addAuth(xhr); }
+                beforeSend: xhr => { this.addAuth(xhr); },
+                success: (data,status,xhr) => 
+                    { 
+                        newPostId = 
+                            +(
+                                xhr.getResponseHeader('Location')?.split('/').pop()
+                                ?? 
+                                -1
+                            ) 
+                    }
             });
+
+        return newPostId;
     }
 
-    async submitComment(from: User, underPostId: number, content: string): Promise<void>
+    async submitComment( underPostId: number, content: string ): Promise<void>
     {
-        //todo implement ajax call
+        if ( ! this.auth.isLoggedIn)
+        {
+            alert("can't comment if login has not been performed")
+            throw new Error("login required")
+        }
+
+        await $.ajax
+            ({
+                url: "/rest/posts/" + underPostId + "/comments",
+                type: "POST",
+                contentType: "text/plain",
+                data: content,
+                beforeSend: xhr => { this.addAuth(xhr); }
+            });
     }
 
 
@@ -81,7 +107,7 @@ class ApiAccess implements IApiAccess
             url: "/rest/users",
             type: "GET",
             beforeSend: xhr => { this.addAuth(xhr); },
-            success: (data,xhr,code) => { user = data },
+            success: (data,status,xhr) => { user = data },
             error: (xhr,exception) => {alert('error retrieving user infos!')}
         });
 

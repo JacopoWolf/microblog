@@ -1,5 +1,6 @@
 package edu.marconivr.jacopo.microblog.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -101,8 +102,12 @@ public class PostsController
         try
         {
             User user = this.authService.authenticateByToken(token);
-            this.postsService.createNew( user.username, post );  
-            return Response.status(Response.Status.CREATED).build();
+            long newId = this.postsService.createNew( user.username, post );  
+
+            return Response
+                .status(Response.Status.CREATED)
+                .location(new URI( "" + newId ))
+                .build();
         }
         catch( Exception e )
         {

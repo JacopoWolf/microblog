@@ -1,5 +1,6 @@
 package edu.marconivr.jacopo.microblog.services.implementations;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,14 @@ public class CommentsService implements ICommentsService
         Post post = postsRepo.findById(id).get();
 
         return commentsRepo.findAllByUnder(post, Sort.by("date"));
+    }
+
+    @Override
+    public void createNew(Comment comment) 
+    {
+        comment.date = new Date();
+
+        this.commentsRepo.saveAndFlush(comment);
     }
 
     

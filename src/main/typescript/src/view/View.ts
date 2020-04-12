@@ -89,6 +89,8 @@ class View
 
         });
 
+        this._state.currentLocation = "view";
+
     }
 
 
@@ -100,7 +102,7 @@ class View
         $(PAGE.VIEW.pageNumber).html('#' + post.id);
 
         // clones the template
-        var pt = $(PAGE.VIEW.templates).find(PAGE.POST.single).clone();
+        let pt = $(PAGE.VIEW.templates).find(PAGE.POST.single).clone();
 
         // header
         pt.find(PAGE.POST.single_date).html(<string>post.date?.toString());
@@ -113,7 +115,9 @@ class View
 
         $(PAGE.VIEW.postContainer).append(pt);
 
+
         this._state.lastPostId = <number>post.id;
+        this._state.currentLocation = "single";
 
     }
 
@@ -129,10 +133,25 @@ class View
             $(PAGE.VIEW.postContainer).append(cmt);
 
         });
+
+        // comments submit
+        let comment = $(PAGE.VIEW.templates).find(PAGE.COMMENT.submitClass).clone();
+            comment.find(PAGE.COMMENT.submitContentButton).click
+                ( 
+                    async () => 
+                    { 
+                        await this._api.submitComment( this._state.lastPostId, <string>$(PAGE.COMMENT.submitContent).val() );
+                        this.displaySingle(await this._api.getPost(<number>this._state.lastPostId));
+                        this.displayComments(await this._api.getPostComments(<number>this._state.lastPostId));
+                    } 
+                ) 
+
+        $(PAGE.VIEW.postContainer).append(comment);
+
     }
 
 
-    async updateLoginStatus( auth: Authentication )
+    async updateLoginStatus( auth: Authentication ): Promise<void>
     {
         if (auth.isLoggedIn)
         {

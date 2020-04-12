@@ -7,12 +7,12 @@ interface IApiAccess
 
     getPost(id: number): Promise<Post>;
 
-    submitPost(post: Post): Promise<void>;
+    submitPost(post: Post): Promise<number>;
 
 
     getPostComments(id: number): Promise<PostComment[]>;
 
-    submitComment(user: User, underId: number, content: string): Promise<void>;
+    submitComment(underId: number, content: string): Promise<void>;
 
 
     registerUser( user: User, password: string ): Promise<void>

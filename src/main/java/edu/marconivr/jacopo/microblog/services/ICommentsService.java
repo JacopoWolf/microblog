@@ -19,4 +19,11 @@ public interface ICommentsService
      */
     List<Comment> getAllUnder( long id );
 
+
+    /**
+     * 
+     * @param comment
+     */
+    void createNew ( Comment comment );
+
 }

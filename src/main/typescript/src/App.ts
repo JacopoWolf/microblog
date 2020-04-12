@@ -22,14 +22,37 @@ class App
 
     updateView()
     {
-        // synchronously waits for the page to upload
-        $.when(
 
-            this.api
-                .getPage(this.appState)
-                .then(posts => { this.view.displayMany(posts); })
+        switch (this.appState.currentLocation)
+        {
+            case "view":
 
-        );
+            // synchronously waits for the page to upload
+                $.when(
+
+                    this.api
+                        .getPage(this.appState)
+                        .then( posts => { this.view.displayMany(posts); } )
+
+                );
+                break;
+
+
+            case "single":
+                $.when(
+                    this.api
+                        .getPost( this.appState.lastPostId )
+                        .then( post => { this.view.displaySingle(post); } )
+                );
+                $.when(
+                    this.api
+                        .getPostComments( this.appState.lastPostId )
+                        .then( comments => { this.view.displayComments(comments); } )
+                );
+                break;
+
+        }
+        
     }
 
     /**
@@ -38,11 +61,17 @@ class App
     eventBinding()
     {
         // previous page, can't get below 0
-        $(PAGE.BUTTONS.backButton).click(() => { if (--this.appState.pageNumber < 0) this.appState.pageNumber = 0; this.updateView(); });
+        $(PAGE.BUTTONS.backButton).click(
+                () => 
+                { 
+                    if (--this.appState.pageNumber < 0) this.appState.pageNumber = 0; 
+                    this.appState.currentLocation = "view"; 
+                    this.updateView(); 
+                });
         // next page
-        $(PAGE.BUTTONS.forwardButton).click(() => { ++this.appState.pageNumber; this.updateView(); });
+        $(PAGE.BUTTONS.forwardButton).click(() => { ++this.appState.pageNumber; this.appState.currentLocation = "view"; this.updateView(); });
         // return to first page
-        $(PAGE.BUTTONS.resetButton).click(() => { this.appState.pageNumber = 0; this.updateView(); this.view.currentLocation = "view"; });
+        $(PAGE.BUTTONS.resetButton).click(() => { this.appState.pageNumber = 0; this.appState.currentLocation = "view"; this.updateView();});
         // refresh
         $(PAGE.BUTTONS.reloadButton).click(() => { this.updateView(); });
 
@@ -51,8 +80,8 @@ class App
         // get back to viewing posts
         $(PAGE.BUTTONS.normalViewButton).click(() => { this.view.currentLocation = "view"; this.updateView(); });
 
-        // submits a new user and post
-        $(PAGE.BUTTONS.submitPostButton).click(async () => { this.submitUserAndPost(); });
+        // submits a new post
+        $(PAGE.BUTTONS.submitPostButton).click(async () => { this.submitPost(); });
 
         // open login window
         $(PAGE.BUTTONS.loginStatusButton).click(() => { this.clickLogin() });
@@ -64,14 +93,14 @@ class App
     }
 
 
-    clickLogin()
+    async clickLogin()
     {
         if (this.auth.isLoggedIn)
         {
             if (window.confirm('do you really want to logout?'))
             {
-                $.when(this.api.logout() );
-                $.when(this.view.updateLoginStatus( this.auth ) );
+                await this.api.logout()
+                await this.view.updateLoginStatus( this.auth );
             }
         }
         else
@@ -94,7 +123,7 @@ class App
     }
 
 
-    async submitUserAndPost()
+    async submitPost()
     {
         if (!this.auth.isLoggedIn)
         {
@@ -114,8 +143,13 @@ class App
             id: undefined
         };
 
-        await this.api.submitPost(post);
+        this.appState.lastPostId = await this.api.submitPost(post);
+
         alert('creato un nuovo post!');
+
+        this.view.currentLocation = "single";
+        this.updateView();
+        //this.view.displaySingle( await this.api.getPost(newId) );
     }
 
 }

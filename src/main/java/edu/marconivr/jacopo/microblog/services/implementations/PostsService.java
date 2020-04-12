@@ -68,7 +68,7 @@ public class PostsService implements IPostsService
     }
 
     @Override
-    public void createNew(String author, Post post) 
+    public long createNew(String author, Post post) 
     {
         User user = usersRepo.findByUsername(author);
 
@@ -78,7 +78,7 @@ public class PostsService implements IPostsService
         post.date = new Date();
         post.author = user;
 
-        postsRepo.saveAndFlush( post );
+        return postsRepo.saveAndFlush( post ).getId();
     }
     
 

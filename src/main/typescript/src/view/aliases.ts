@@ -70,6 +70,10 @@ namespace PAGE
         
         static header = PAGE.POST.multi_header
         static content = '.post_content'
+
+        static submitClass = '.comment_sub'
+        static submitContent = '.comment_submit_content'
+        static submitContentButton = '.comment_submit'
     }
 
     /**

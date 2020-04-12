@@ -124,9 +124,12 @@ div.post_content  h3 {
     cursor: pointer;
 }
 
-div.comment
-{
+div.comment{
     padding: 10px;
+}
+
+div.comment_sub{
+    padding-bottom: 30px;
 }
 
 

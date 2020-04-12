@@ -38,7 +38,7 @@ public interface IPostsService
      * @param post
      * @return
      */
-    void createNew
+    long createNew
     (
         String author,
         Post post
