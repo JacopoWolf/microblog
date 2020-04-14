@@ -44,7 +44,7 @@ public class AuthController
             password = values[1];
 
         }
-        catch(IndexOutOfBoundsException ioe)
+        catch(Exception e)
         {
             throw new WebApplicationException( Response.Status.BAD_REQUEST );
         }

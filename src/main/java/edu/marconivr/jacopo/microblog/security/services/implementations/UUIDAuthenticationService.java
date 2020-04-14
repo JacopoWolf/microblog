@@ -26,6 +26,8 @@ public class UUIDAuthenticationService implements IAuthenticationService
     {
         User user = this.userService.getByNickname(username);
 
+        if (user == null)
+            throw new BadCredentialsException("User doesn't exist");
 
         if ( ! passwordService.verify(user, password) )
             throw new BadCredentialsException("Wrong password");
