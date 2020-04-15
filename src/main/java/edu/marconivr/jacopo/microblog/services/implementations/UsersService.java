@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.entities.repositories.IUserRepository;
+import edu.marconivr.jacopo.microblog.security.services.ISanitationService;
 import edu.marconivr.jacopo.microblog.services.IUsersService;
 import edu.marconivr.jacopo.microblog.services.IValidationService;
 
@@ -21,6 +22,10 @@ public class UsersService implements IUsersService
 
     @Autowired
     private IUserRepository usersRepo;
+
+    @Autowired
+    private ISanitationService sanitationService;
+
 
     @Override
     public List<User> getAll() 
@@ -49,6 +54,8 @@ public class UsersService implements IUsersService
         if ( usersRepo.findByUsername(user.username) != null )
             throw new WebApplicationException( Response.Status.CONFLICT );
 
+        user.username = this.sanitationService.escapeHTML(user.username);
+
         usersRepo.saveAndFlush( user );
     }
 
@@ -56,6 +63,8 @@ public class UsersService implements IUsersService
     @Override
     public void updateUser(User user) 
     {
+        user.username = this.sanitationService.escapeHTML(user.username);
+        
         this.usersRepo.saveAndFlush(user);
     }
 

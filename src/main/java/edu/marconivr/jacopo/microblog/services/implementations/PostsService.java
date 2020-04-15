@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import edu.marconivr.jacopo.microblog.entities.Post;
 import edu.marconivr.jacopo.microblog.entities.User;
 import edu.marconivr.jacopo.microblog.entities.repositories.*;
+import edu.marconivr.jacopo.microblog.security.services.ISanitationService;
 import edu.marconivr.jacopo.microblog.services.*;
 
 @Service
@@ -26,6 +27,9 @@ public class PostsService implements IPostsService
 
     @Autowired
     private IPostsRepository postsRepo;
+
+    @Autowired
+    private ISanitationService sanitationService;
 
     @Override
     public List<Post> getPage(String username, int page, int count, int limit) 
@@ -77,6 +81,8 @@ public class PostsService implements IPostsService
 
         post.date = new Date();
         post.author = user;
+
+        post.content = this.sanitationService.escapeHTML(post.content);
 
         return postsRepo.saveAndFlush( post ).getId();
     }

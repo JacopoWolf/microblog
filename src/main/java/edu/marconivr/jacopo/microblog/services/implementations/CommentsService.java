@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import edu.marconivr.jacopo.microblog.entities.Comment;
 import edu.marconivr.jacopo.microblog.entities.Post;
 import edu.marconivr.jacopo.microblog.entities.repositories.*;
+import edu.marconivr.jacopo.microblog.security.services.ISanitationService;
 import edu.marconivr.jacopo.microblog.services.ICommentsService;
 
 @Service
@@ -21,6 +22,9 @@ public class CommentsService implements ICommentsService
 
     @Autowired
     private IPostsRepository postsRepo;
+
+    @Autowired
+    private ISanitationService sanitationService;
 
 
     @Override
@@ -41,6 +45,8 @@ public class CommentsService implements ICommentsService
     public void createNew(Comment comment) 
     {
         comment.date = new Date();
+
+        comment.content = this.sanitationService.escapeHTML(comment.content);
 
         this.commentsRepo.saveAndFlush(comment);
     }
