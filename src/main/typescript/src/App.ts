@@ -138,6 +138,7 @@ class App
             content: <string>$(PAGE.CREATION.content).val(),
 
             // assigned by the Server
+            commentsCount: undefined,
             author: undefined,
             date: undefined,
             id: undefined
