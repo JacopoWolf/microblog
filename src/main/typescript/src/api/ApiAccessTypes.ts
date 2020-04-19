@@ -15,6 +15,7 @@ type Post =
         id: undefined | number;
         date: undefined | Date;
         author: undefined | User;
+        commentsCount: undefined | number;
         title: string;
         content: string;
     };

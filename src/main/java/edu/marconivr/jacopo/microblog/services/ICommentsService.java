@@ -19,6 +19,14 @@ public interface ICommentsService
      */
     List<Comment> getAllUnder( long id );
 
+    
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    int countUnder(Long id);
+
 
     /**
      * 

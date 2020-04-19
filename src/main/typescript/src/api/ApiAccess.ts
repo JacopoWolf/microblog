@@ -15,13 +15,32 @@ class ApiAccess implements IApiAccess
     // GET methods
     async getPage(state: ApplicationState): Promise<Post[]>
     {
+        // gets the list of posts
         let query =
             '/rest/posts' +
             '?count=' + state.pageSize +
             '&page=' + state.pageNumber +
             '&limitcontent=' + state.contentMaxLengthInView;
 
-        return await $.get(query);
+        let posts : Post[] = await $.get(query);
+
+        // gets the list of ids 
+        let commentsPromises : Promise<[number,number]>[] = []
+        
+        for ( let post of posts )
+            commentsPromises.push( this.getCommentCount(<number>post.id) )
+
+        let commentsC = await Promise.all( commentsPromises );
+
+        for ( let post of posts )
+            post.commentsCount = commentsC.find( t => t[0] == <number>post.id )?.[1]
+        
+        return posts;
+    }
+
+    private async getCommentCount(id: number): Promise<[number,number]>
+    {
+        return [ id , await $.get( '/rest/posts/' + id + '/comments/count' )];
     }
 
     async getPost(postId: number): Promise<Post>

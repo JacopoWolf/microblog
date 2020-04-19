@@ -51,5 +51,13 @@ public class CommentsService implements ICommentsService
         this.commentsRepo.saveAndFlush(comment);
     }
 
+    @Override
+    public int countUnder(Long id) 
+    {
+        Post post = postsRepo.findById(id).get();
+        
+        return this.commentsRepo.countByUnder(post);
+
+    }
     
 }

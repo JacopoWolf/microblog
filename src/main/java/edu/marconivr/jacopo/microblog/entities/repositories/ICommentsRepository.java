@@ -16,4 +16,6 @@ public interface ICommentsRepository extends JpaRepository<Comment,Long>
 
     List<Comment> findAllByUnder( Post post, Sort sort );
 
+    int countByUnder( Post post );
+
 }

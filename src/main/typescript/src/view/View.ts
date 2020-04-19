@@ -83,6 +83,7 @@ class View
             // content
             let contentEnd = (post.content.length < this._state.contentMaxLengthInView) ? '' : '...';
             pt.find(PAGE.POST.multi_content).html(post.content + contentEnd);
+            pt.find(PAGE.POST.multi_comment_count).html( '' + post.commentsCount );
 
 
             $(PAGE.VIEW.postContainer).append(pt);

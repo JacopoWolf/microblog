@@ -45,6 +45,13 @@ public class CommentsController
         return this.commentsService.getAllUnder(id);
     }
 
+    @GET @Path("/{post}/comments/count")
+    @Produces("text/plain")
+    public int countCommentsUnder( @PathParam("post") Long id )
+    {
+        return  this.commentsService.countUnder(id);
+    }
+
     @POST @Path("/{post}/comments")
     @Consumes("text/plain")
     @ApiOperation(value = "post a new comment under the specified post")

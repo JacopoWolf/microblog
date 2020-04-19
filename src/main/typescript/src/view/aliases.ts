@@ -55,6 +55,8 @@ namespace PAGE
         static multi_title = '.post_content_h'
         static multi_content = '.post_content_p'
 
+        static multi_comment_count = '.post_comment_counter'
+
         static single_date = '.singlePost_header_date'
         static single_username = '.singlePost_header_username'
         static single_title = '.singlePost_header_title'
