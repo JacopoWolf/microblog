@@ -11,10 +11,13 @@ A spring boot template project
 A TypeScript compiler is required to build the JavaScript necessary for the WebPage to work.
 
 1. Install [Node.js](https://nodejs.org)
-2. *if you want you can install the typescript compiler globally* <br> `npm install -g typescript`
-3. from *src/main/typescript* run `npm ci` to install dependencies
-4. start the compiler by simply running `tsc`
+2. from *src/main/typescript* run `npm ci` to install dependencies
+3. checkout directory `./src/main/typescript`
+4. start the compiler by simply running `npm run tsc`
 
+- *In alternative install typescript globally.*
+
+**Note**: tsc will start in watch mode. remember to stop it.
 
 ### Notes
 
