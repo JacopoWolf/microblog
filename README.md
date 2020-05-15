@@ -15,11 +15,13 @@ A spring boot template project
 
 ### VSCode
 
-1. install frontend dependencies with `npm install`
-2. build the frontend
+
+1. Install suggested extensions, search `@recommended` in the extensions tab
+2. install frontend dependencies with `npm install`
+3. build the frontend
    - Once with `npm run build`
    - In watch mode `npm run watch`
-3. run the application
+4. run the application
    - **spring-boot dashboard** 
      1. right click the grey dot and select *Start*
      2. wait for maven do download your dependencies (might take a lot of time) and the application to start
