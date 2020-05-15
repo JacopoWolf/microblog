@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "vscjava.vscode-java-pack",
+        "Pivotal.vscode-boot-dev-pack",
+        "techer.open-in-browser",
+        "humao.rest-client"
+    ]
+}

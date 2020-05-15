@@ -4,6 +4,13 @@
 target/
 !**/src/resources/application.properties
 
+### VSCODE ###
+
+.vscode/*
+!.vscode/launch.json
+!.vscode/extensions.json
+
+
 ### STS ###
 .apt_generated
 .classpath
@@ -27,8 +34,6 @@ target/
 /.nb-gradle/
 build/
 
-### VS Code ###
-.vscode/
 
 ### typescript
 # Logs

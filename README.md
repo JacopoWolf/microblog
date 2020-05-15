@@ -6,20 +6,41 @@ A spring boot template project
 
 ---
 
-### Requirements
+## Requirements
 
-A TypeScript compiler is required to build the JavaScript necessary for the WebPage to work.
+- [Node.js](https://nodejs.org)
 
-1. Install [Node.js](https://nodejs.org)
-2. checkout directory `./src/main/typescript`
-3. run `npm ci` to install dependencies
-4. start the compiler: `npm run tsc`
 
-- *In alternative install typescript globally.*
+## Starting the app
 
-**Note**: tsc will start in watch mode. remember to stop it.
+### VSCode
 
-### Notes
+1. install frontend dependencies with `npm install`
+2. build the frontend
+   - Once with `npm run build`
+   - In watch mode `npm run watch`
+3. run the application
+   - **spring-boot dashboard** 
+     1. right click the grey dot and select *Start*
+     2. wait for maven do download your dependencies (might take a lot of time) and the application to start
+     3. right click again on the now green dot and *Open In Browser*
+   - normal run
+     1. run: *Start Without Debugging* 
+     2. open your browser and go to `http://localost:8080`
+
+
+### Outside VSCode
+
+1. install frontend dependencies with `npm install`
+2. build the frontend
+   - Once with `npm run build`
+   - In watch mode `npm run watch`
+3. set your main class to *edu.marconivr.jacopo.microblog.Application*
+4. build the application
+5. open your browser and go to `http://localost:8080`
+
+
+## Notes
 
 - Swagger documentation is at `/rest/swagger.json`
 

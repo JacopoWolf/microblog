@@ -4,7 +4,8 @@
   "description": "microblog frontend ",
   "main": " ",
   "scripts": {
-    "tsc": "tsc"
+    "watch": "tsc -w",
+    "build": "tsc"
   },
   "author": "JacopoWolf",
   "license": "MIT",
